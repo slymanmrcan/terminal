@@ -2,91 +2,44 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Süleyman Mercan | Backend Engineer (.NET)</title>
 
-    <!-- Primary Meta Tags -->
-    <title>Süleyman MERCAN - Terminal Resume</title>
-    <meta name="title" content="Süleyman MERCAN - Backend Developer">
-    <meta name="description" content="Backend Developer - .NET Core, REST API, Clean Architecture. Terminal tarzı interaktif CV.">
-    <meta name="keywords" content="backend developer, .net core, rest api, software engineer, süleyman mercan">
-    <meta name="author" content="Süleyman MERCAN">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="Backend Engineer specialized in .NET Core, REST APIs, Clean Architecture. Interactive Linux terminal-style resume.">
+    <meta name="author" content="Süleyman Mercan">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://github.com/slymanmrcan">
-    <meta property="og:title" content="Süleyman MERCAN - Backend Developer">
-    <meta property="og:description" content="Backend Developer - .NET Core, REST API, Clean Architecture">
+    <meta name="theme-color" content="#000000">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Süleyman MERCAN - Backend Developer">
-    <meta property="twitter:description" content="Backend Developer - .NET Core, REST API, Clean Architecture">
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
-
-    <!-- Theme Color -->
-    <meta name="theme-color" content="#0a0a0a">
-
-    <!-- Stylesheet -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="terminal" role="main" aria-label="Interactive Terminal Resume">
-        <!-- Terminal Header -->
-        <div class="terminal-header" role="banner">
-            <span class="terminal-title" aria-label="Terminal window title">suleyman@resume:~</span>
-            <div class="terminal-controls" aria-label="Window controls">
-                <span class="control close" role="button" aria-label="Close window" tabindex="0"></span>
-                <span class="control minimize" role="button" aria-label="Minimize window" tabindex="0"></span>
-                <span class="control maximize" role="button" aria-label="Maximize window" tabindex="0"></span>
-            </div>
-        </div>
 
-        <!-- Terminal Body -->
-        <div class="terminal-body" role="log" aria-live="polite" aria-relevant="additions">
-            <!-- Output Area -->
-            <div id="output" class="output" aria-label="Terminal output"></div>
+<main class="terminal" role="main">
+    <div class="terminal-body" id="terminal">
+        <div id="output" class="output"></div>
 
-            <!-- Input Line -->
-            <div class="input-line" role="form">
-                <label for="input" class="prompt" aria-label="Command prompt">suleyman@resume:~$</label>
-                <input
-                    type="text"
-                    id="input"
-                    class="input"
-                    autofocus
-                    autocomplete="off"
-                    autocorrect="off"
-                    autocapitalize="off"
-                    spellcheck="false"
-                    aria-label="Terminal command input"
-                    placeholder="Type 'help' to start..."
-                >
-            </div>
+        <div class="input-line">
+            <span class="prompt">suleyman@resume:~$</span>
+            <input
+                id="input"
+                class="input"
+                type="text"
+                autofocus
+                autocomplete="off"
+                spellcheck="false"
+            >
         </div>
     </div>
+</main>
 
-    <!-- Screen Reader Instructions -->
-    <div class="sr-only" role="complementary" aria-label="Accessibility notice">
-        This is an interactive terminal-style resume. For a traditional resume format,
-        please contact via email provided in the contact section.
+<noscript>
+    <div class="noscript">
+        JavaScript is required to view this terminal resume.
     </div>
+</noscript>
 
-    <!-- Main Script -->
-    <script src="terminal.js"></script>
-
-    <!-- No JavaScript Fallback -->
-    <noscript>
-        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0a0a0a; color: #00ff00; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; font-family: monospace;">
-            <div>
-                <h1 style="color: #00ff00; margin-bottom: 20px;">⚠️ JavaScript Required</h1>
-                <p style="margin-bottom: 15px;">This interactive terminal resume requires JavaScript to function.</p>
-                <p>Please enable JavaScript in your browser to view this portfolio.</p>
-            </div>
-        </div>
-    </noscript>
+<script src="terminal.js"></script>
 </body>
 </html>

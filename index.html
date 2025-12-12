@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Primary Meta Tags -->
+    <title>Süleyman MERCAN - Terminal Resume</title>
+    <meta name="title" content="Süleyman MERCAN - Backend Developer">
+    <meta name="description" content="Backend Developer - .NET Core, REST API, Clean Architecture. Terminal tarzı interaktif CV.">
+    <meta name="keywords" content="backend developer, .net core, rest api, software engineer, süleyman mercan">
+    <meta name="author" content="Süleyman MERCAN">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/slymanmrcan">
+    <meta property="og:title" content="Süleyman MERCAN - Backend Developer">
+    <meta property="og:description" content="Backend Developer - .NET Core, REST API, Clean Architecture">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Süleyman MERCAN - Backend Developer">
+    <meta property="twitter:description" content="Backend Developer - .NET Core, REST API, Clean Architecture">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#1d1f21">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="terminal" role="main" aria-label="Interactive Terminal Resume">
+        <div class="terminal-header" role="banner">
+            <div class="terminal-controls" aria-label="Window controls">
+                <span class="control close" role="button" aria-label="Close window"></span>
+                <span class="control minimize" role="button" aria-label="Minimize window"></span>
+                <span class="control maximize" role="button" aria-label="Maximize window"></span>
+            </div>
+            <span class="terminal-title" aria-label="Terminal window title">suleyman@terminal: ~</span>
+            <div class="terminal-menu">
+                <span>⚙️</span>
+            </div>
+        </div>
+
+        <div class="terminal-body" role="log" aria-live="polite">
+            <div id="output" class="output"></div>
+
+            <div class="input-line" role="form">
+                <label for="input" class="prompt">➜ <span class="prompt-dir">~</span></label>
+                <input
+                    type="text"
+                    id="input"
+                    class="input"
+                    autofocus
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    placeholder="type 'help' to start"
+                >
+            </div>
+        </div>
+    </div>
+
+    <script src="terminal.js"></script>
+
+    <noscript>
+        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #1d1f21; color: #c5c8c6; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;">
+            <div>
+                <h1 style="color: #cc6666; margin-bottom: 20px;">⚠️ JavaScript Required</h1>
+                <p style="margin-bottom: 15px;">This interactive terminal resume requires JavaScript.</p>
+                <p>Please enable JavaScript in your browser.</p>
+            </div>
+        </div>
+    </noscript>
+</body>
+</html>

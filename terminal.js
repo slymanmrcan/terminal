@@ -33,7 +33,7 @@ const terminalData = {
         },
         {
             degree: "Bilgisayar Programcılığı",
-            school: "Karatay Üniversitesi",
+            school: "Konya Teknik Üniversitesi",
             period: "2015 - 2018"
         }
     ],
@@ -80,7 +80,7 @@ const terminalData = {
     otherProjects: ["DeviceInfo", "KasaTakip", "github-infra", "PrivFlow"]
 };
 
-// Yeni: ls çıktısı için dosya boyutları
+// Yeni: ls çıktısı için dosya boyutları (ls -l benzeri çıktı için)
 const fileSizes = {
     "about.txt": "1.2K",
     "experience.txt": "2.1K",
@@ -190,13 +190,15 @@ ${p.description}
         return out;
     },
 
-    contact: () => `
-<span class="section-title">Contact</span>
-Email    : <span class="info">${terminalData.contact.email}</span>
-Phone    : <span class="info">${terminalData.contact.phone}</span>
-GitHub   : <span class="info">https://${terminalData.contact.github}</span>
-LinkedIn : <span class="info">https://${terminalData.contact.linkedin}</span>
-`,
+    contact: () => {
+        // Çıktıyı hizalamak için boşlukları kullanarak formatlama
+        const email = `Email    : <span class="info">${terminalData.contact.email}</span>`;
+        const phone = `Phone    : <span class="info">${terminalData.contact.phone}</span>`;
+        const github = `GitHub   : <span class="info">https://${terminalData.contact.github}</span>`;
+        const linkedin = `LinkedIn : <span class="info">https://${terminalData.contact.linkedin}</span>`;
+
+        return `<span class="section-title">Contact</span>\n${email}\n${phone}\n${github}\n${linkedin}`;
+    },
 
     all: () =>
         commands.about() +
@@ -233,7 +235,7 @@ LinkedIn : <span class="info">https://${terminalData.contact.linkedin}</span>
         
         // Output format: [Size] [File Name]
         files.forEach(file => {
-            // padEnd ile boyut bilgisini hizalıyoruz
+            // padEnd ile boyut bilgisini hizalıyoruz (mono-boşluklu fontlarda işe yarar)
             out += `<span class="dim">${fileSizes[file].padEnd(6, ' ')}</span> <span class="success">${file}</span>\n`;
         });
         return out;
@@ -244,11 +246,12 @@ LinkedIn : <span class="info">https://${terminalData.contact.linkedin}</span>
         
         const file = args[0].toLowerCase();
         
+        // Dosya mevcut mu kontrol et
         if (!fileSizes.hasOwnProperty(args[0])) {
              return `<span class='error'>cat: ${args[0]}: No such file or directory</span>`;
         }
 
-        // Dosya adıyla eşleşen bir komut adı var mı kontrol et
+        // İstenen dosya adını komut adına çevir
         const cmdName = file.replace(".txt", "").replace(".md", "");
 
         if (cmdName === "readme") {
@@ -259,9 +262,9 @@ Type 'help' to explore this terminal resume.
 `;
         }
 
-        // İlgili komutun çıktısını al
+        // İlgili komutun çıktısını al (örn: cat about.txt -> commands.about())
         if (commands[cmdName] && ['about', 'experience', 'education', 'skills', 'projects', 'contact'].includes(cmdName)) {
-            return commands[cmdName](); // Komutu çağır ve çıktıyı göster
+            return commands[cmdName](); 
         }
         
         return `<span class='error'>cat: ${args[0]}: Error reading file content</span>`;
@@ -322,7 +325,7 @@ input.addEventListener("keydown", e => {
     }
     // Up Arrow (Tarihçede yukarı)
     if (e.key === "ArrowUp") {
-        e.preventDefault(); // İmlecin hareket etmesini engelle
+        e.preventDefault(); 
         if (historyIndex < commandHistory.length - 1) {
             historyIndex++;
             input.value = commandHistory[historyIndex];
@@ -332,7 +335,7 @@ input.addEventListener("keydown", e => {
     }
     // Down Arrow (Tarihçede aşağı)
     if (e.key === "ArrowDown") {
-        e.preventDefault(); // İmlecin hareket etmesini engelle
+        e.preventDefault(); 
         if (historyIndex > 0) {
             historyIndex--;
             input.value = commandHistory[historyIndex];

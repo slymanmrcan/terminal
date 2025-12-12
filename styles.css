@@ -31,16 +31,30 @@ body {
     width: 100vw;
     height: 100vh;
 }
-
 .terminal-body {
-    padding: 10px;
-    height: 100%;
+    padding: 8px 10px;
+    height: 100vh;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .output-line {
-    white-space: pre-wrap;
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
 }
+
+/* Büyük boşlukları öldür */
+.section-title {
+    margin: 6px 0 4px;
+}
+
+/* Banner, ascii vs varsa minimal */
+.ascii-art {
+    font-size: 12px;
+    line-height: 1.2;
+}
+
 
 .prompt {
     margin-right: 6px;

@@ -1,4 +1,3 @@
-
 const terminalData = {
     name: "Süleyman MERCAN",
     title: "Backend Developer",
@@ -81,6 +80,17 @@ const terminalData = {
     otherProjects: ["DeviceInfo", "KasaTakip", "github-infra", "PrivFlow"]
 };
 
+// Yeni: ls çıktısı için dosya boyutları
+const fileSizes = {
+    "about.txt": "1.2K",
+    "experience.txt": "2.1K",
+    "education.txt": "800B",
+    "skills.txt": "1.5K",
+    "projects.txt": "3.2K",
+    "contact.txt": "450B",
+    "README.md": "300B"
+};
+
 // --------------------------------------------------------------------------
 // STATE
 // --------------------------------------------------------------------------
@@ -103,6 +113,7 @@ function printOutput(html, cls = "") {
     line.className = `output-line ${cls}`;
     line.innerHTML = html;
     output.appendChild(line);
+    // Kaydırma (scrolling) iyileştirmesi
     terminal.scrollTop = terminal.scrollHeight;
 }
 
@@ -111,19 +122,19 @@ function printCommand(cmd) {
 }
 
 // --------------------------------------------------------------------------
-// COMMAND DEFINITIONS (AYNI İÇERİK)
+// COMMAND DEFINITIONS
 // --------------------------------------------------------------------------
 
 const commands = {
 
     help: () => `
 <span class="section-title">Available commands</span>
-about       experience   education
-skills      projects     contact
+about       experience    education
+skills      projects      contact
 all         clear
-github      linkedin
-whoami     neofetch
-pwd         ls            cat
+github      linkedin      <span class="info">cat [file]</span>
+whoami      neofetch      <span class="info">ls</span>
+pwd
 `,
 
     about: () => `
@@ -139,7 +150,7 @@ ${terminalData.about}
         terminalData.experience.forEach(e => {
             out += `
 <span class="success">${e.title}</span> @ <span class="info">${e.company}</span>
-<span class="info-label">${e.location} | ${e.period}</span>
+<span class="info-label">${e.location} - ${e.period}</span>
 ${e.description}
 `;
         });
@@ -170,21 +181,21 @@ ${e.description}
         let out = `<span class="section-title">Projects</span>\n`;
         terminalData.projects.forEach(p => {
             out += `
-<span class="success">${p.name}</span> (${p.tech})
+<span class="success">${p.name}</span> (<span class="dim">${p.tech}</span>)
 ${p.description}
 - ${p.features.join("\n- ")}
 `;
         });
-        out += `\nOther: ${terminalData.otherProjects.join(", ")}`;
+        out += `\nOther: <span class="dim">${terminalData.otherProjects.join(", ")}</span>`;
         return out;
     },
 
     contact: () => `
 <span class="section-title">Contact</span>
-Email    : ${terminalData.contact.email}
-Phone    : ${terminalData.contact.phone}
-GitHub   : https://${terminalData.contact.github}
-LinkedIn : https://${terminalData.contact.linkedin}
+Email    : <span class="info">${terminalData.contact.email}</span>
+Phone    : <span class="info">${terminalData.contact.phone}</span>
+GitHub   : <span class="info">https://${terminalData.contact.github}</span>
+LinkedIn : <span class="info">https://${terminalData.contact.linkedin}</span>
 `,
 
     all: () =>
@@ -214,29 +225,60 @@ LinkedIn : https://${terminalData.contact.linkedin}
         terminalData.name.toLowerCase().replace(" ", "_"),
 
     pwd: () =>
-        `/home/suleyman/resume`,
+        `<span class="info">/home/${commands.whoami()}/resume</span>`,
 
-    ls: () =>
-        `about.txt  experience.txt  education.txt  skills.txt  projects.txt  contact.txt  README.md`,
+    ls: () => {
+        let out = "";
+        const files = Object.keys(fileSizes);
+        
+        // Output format: [Size] [File Name]
+        files.forEach(file => {
+            // padEnd ile boyut bilgisini hizalıyoruz
+            out += `<span class="dim">${fileSizes[file].padEnd(6, ' ')}</span> <span class="success">${file}</span>\n`;
+        });
+        return out;
+    },
 
     cat: (args) => {
-        if (!args[0]) return "cat: missing file operand";
-        if (args[0] === "README.md") {
+        if (!args[0]) return "<span class='error'>cat: missing file operand</span>";
+        
+        const file = args[0].toLowerCase();
+        
+        if (!fileSizes.hasOwnProperty(args[0])) {
+             return `<span class='error'>cat: ${args[0]}: No such file or directory</span>`;
+        }
+
+        // Dosya adıyla eşleşen bir komut adı var mı kontrol et
+        const cmdName = file.replace(".txt", "").replace(".md", "");
+
+        if (cmdName === "readme") {
             return `
 ${terminalData.name} - ${terminalData.title}
 
 Type 'help' to explore this terminal resume.
 `;
         }
-        return `cat: ${args[0]}: No such file`;
+
+        // İlgili komutun çıktısını al
+        if (commands[cmdName] && ['about', 'experience', 'education', 'skills', 'projects', 'contact'].includes(cmdName)) {
+            return commands[cmdName](); // Komutu çağır ve çıktıyı göster
+        }
+        
+        return `<span class='error'>cat: ${args[0]}: Error reading file content</span>`;
     },
 
     neofetch: () => `
 <pre class="ascii-art">
-OS: Ubuntu (terminal CV)
-Kernel: .NET Core
-Shell: bash
-User: ${terminalData.name}
+             .ooooo.   <span class="info">OS: Ubuntu (Terminal Resume)</span>
+            d88'   '88b  <span class="info">Kernel: .NET Core</span>
+            888     888  <span class="info">Shell: bash</span>
+            888     888  <span class="info">User: ${terminalData.name}</span>
+.o.         888     888  <span class="warn">Focus: Backend (REST API)</span>
+'888b       '8b   d88'   <span class="warn">Lang: C#, JS, SQL</span>
+ '888b       '8ooooo'    <span class="warn">DB: SQL Server, PostgreSQL</span>
+  '888b                  <span class="warn">Framework: ASP.NET Core</span>
+   '888b
+    '888b
 </pre>
 `
 };
@@ -261,7 +303,7 @@ function handleCommand(raw) {
     const fn = commands[cmd];
 
     if (!fn) {
-        printOutput(`bash: ${cmd}: command not found`, "error");
+        printOutput(`bash: <span class='error'>${cmd}</span>: command not found`, "error");
         return;
     }
 
@@ -278,21 +320,30 @@ input.addEventListener("keydown", e => {
         handleCommand(input.value);
         input.value = "";
     }
+    // Up Arrow (Tarihçede yukarı)
     if (e.key === "ArrowUp") {
+        e.preventDefault(); // İmlecin hareket etmesini engelle
         if (historyIndex < commandHistory.length - 1) {
             historyIndex++;
             input.value = commandHistory[historyIndex];
+            // İmleci sona taşı
+            setTimeout(() => input.selectionStart = input.selectionEnd = input.value.length, 0);
         }
     }
+    // Down Arrow (Tarihçede aşağı)
     if (e.key === "ArrowDown") {
+        e.preventDefault(); // İmlecin hareket etmesini engelle
         if (historyIndex > 0) {
             historyIndex--;
             input.value = commandHistory[historyIndex];
-        } else {
+            // İmleci sona taşı
+            setTimeout(() => input.selectionStart = input.selectionEnd = input.value.length, 0);
+        } else if (historyIndex === 0) {
             historyIndex = -1;
             input.value = "";
         }
     }
+    // Ctrl + L (Temizleme)
     if (e.ctrlKey && e.key === "l") {
         e.preventDefault();
         commands.clear();
@@ -305,8 +356,8 @@ input.addEventListener("keydown", e => {
 
 window.addEventListener("load", () => {
     printOutput("Last login: tty1");
-    printOutput(`Welcome, ${terminalData.name}`);
-    printOutput("Type 'help' to get started.");
+    printOutput(`Welcome, <span class="info">${terminalData.name}</span>`);
+    printOutput("Type '<span class='success'>help</span>' to get started.");
     input.focus();
 });
 

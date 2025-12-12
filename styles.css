@@ -1,3 +1,4 @@
+/* Terminal Renkleri */
 :root {
     --bg: #000;
     --fg: #00ff00;
@@ -5,19 +6,9 @@
     --error: #ff5555;
     --info: #5fd7ff;
     --warn: #ffaa00;
-    --success: #33ff33; /* Yeni başarı rengi */
+    --success: #33ff33; /* Yeni Başarı Rengi */
 }
-/* CSS - colors bölümüne ekle */
-.error { color: var(--error); }
-.info { color: var(--info); }
-.warn { color: var(--warn); }
-.dim { color: var(--fg-dim); }
-.success { color: var(--success); } /* Yeni tanım */
 
-::selection {
-    background: var(--fg);
-    color: var(--bg);
-}
 /* reset */
 * {
     margin: 0;
@@ -33,52 +24,55 @@ body {
     font-family: "JetBrains Mono", "Fira Code", monospace;
     font-size: 13px;
     line-height: 1.4;
-    width: 80%;
-    height: 100%;
-    overflow: hidden;
-}
-/* CSS */
-.section-title {
-    font-weight: bold;
-    margin: 6px 0 4px;
-    border-bottom: 1px solid var(--fg-dim); /* #222 yerine daha tutarlı bir dim renk */
-    padding-bottom: 2px;
+    overflow-y: scroll; /* Terminal içeriği taştığında tüm sayfanın kaydırması için */
 }
 
-.info-label {
-    color: var(--fg-dim); /* #777 yerine daha uygun */
-    margin-top: 6px;
-    display: block;
-}
+/* Terminal Kapsayıcısı ve Merkezleme */
 .terminal {
-    width:   100vw;
-    height:  100vh;
-    padding: 12px;
+    width: 90%; /* Sayfanın %90'ını kapla */
+    max-width: 900px; /* Maksimum genişlik sınırı */
+    min-height: 100vh; /* Sayfa boyu kadar minimum yükseklik */
+    margin: 0 auto; /* Yatayda ortala */
+    padding: 20px 10px; /* Üst/Alt padding'i artırarak kenardan uzaklaştır */
+    display: flex; 
+    flex-direction: column;
 }
+
 .terminal-body {
-    padding: 10px 12px; /* Dikey ve yatay padding biraz artırıldı */
-    height: 100%; /* 100vh yerine 100% daha iyi */
+    flex-grow: 1; /* Mevcut alanı doldur */
+    padding: 10px 15px; /* Yatay padding artırıldı */
     overflow-y: auto;
     overflow-x: hidden;
-    /* Sınır rengini biraz daha belirgin yapalım */
-    border: 1px solid var(--fg-dim); /* #1e1e1e yerine dim rengini kullan */
+    border: 1px solid var(--fg-dim); /* Daha tutarlı sınır rengi */
 }
 
+/* Çıktı ve Giriş Satırları */
 .output-line {
     margin: 0;
     padding: 0;
     line-height: 1.4;
+    white-space: pre-wrap; /* Metinlerin alt satıra inmesini sağlar */
 }
 
-/* Büyük boşlukları öldür */
 .section-title {
+    font-weight: bold;
     margin: 6px 0 4px;
+    border-bottom: 1px solid var(--fg-dim); /* Daha tutarlı alt çizgi rengi */
+    padding-bottom: 2px;
+}
+
+.info-label {
+    color: var(--fg-dim); /* Daha uyumlu renk */
+    margin-top: 4px; 
+    margin-bottom: 4px; /* Altına boşluk eklendi */
+    display: block;
 }
 
 /* Banner, ascii vs varsa minimal */
 .ascii-art {
-    font-size: 12px;
-    line-height: 1.2;
+    font-size: 13px;
+    line-height: 1.1; /* Daha kompakt görünüm */
+    margin: 4px 0;
 }
 
 
@@ -108,6 +102,7 @@ body {
 .info { color: var(--info); }
 .warn { color: var(--warn); }
 .dim { color: var(--fg-dim); }
+.success { color: var(--success); } /* Yeni Tanım */
 
 ::selection {
     background: var(--fg);

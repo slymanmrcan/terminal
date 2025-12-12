@@ -5,8 +5,19 @@
     --error: #ff5555;
     --info: #5fd7ff;
     --warn: #ffaa00;
+    --success: #33ff33; /* Yeni başarı rengi */
 }
+/* CSS - colors bölümüne ekle */
+.error { color: var(--error); }
+.info { color: var(--info); }
+.warn { color: var(--warn); }
+.dim { color: var(--fg-dim); }
+.success { color: var(--success); } /* Yeni tanım */
 
+::selection {
+    background: var(--fg);
+    color: var(--bg);
+}
 /* reset */
 * {
     margin: 0;
@@ -22,19 +33,20 @@ body {
     font-family: "JetBrains Mono", "Fira Code", monospace;
     font-size: 13px;
     line-height: 1.4;
-    width: 100vw;
-    height: 100vh;
+    width: 80%;
+    height: 100%;
     overflow: hidden;
 }
+/* CSS */
 .section-title {
     font-weight: bold;
     margin: 6px 0 4px;
-    border-bottom: 1px solid #222;
+    border-bottom: 1px solid var(--fg-dim); /* #222 yerine daha tutarlı bir dim renk */
     padding-bottom: 2px;
 }
 
 .info-label {
-    color: #777;
+    color: var(--fg-dim); /* #777 yerine daha uygun */
     margin-top: 6px;
     display: block;
 }
@@ -44,11 +56,12 @@ body {
     padding: 12px;
 }
 .terminal-body {
-    padding: 8px 10px;
-    height: 100vh;
+    padding: 10px 12px; /* Dikey ve yatay padding biraz artırıldı */
+    height: 100%; /* 100vh yerine 100% daha iyi */
     overflow-y: auto;
     overflow-x: hidden;
-    border: 1px solid #1e1e1e;
+    /* Sınır rengini biraz daha belirgin yapalım */
+    border: 1px solid var(--fg-dim); /* #1e1e1e yerine dim rengini kullan */
 }
 
 .output-line {

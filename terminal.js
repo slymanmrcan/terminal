@@ -1,9 +1,12 @@
 // ==========================================================================
-// Terminal Resume - Main Logic
+// Terminal Resume - Main Logic (Linux / TTY Compatible)
 // Süleyman MERCAN - Backend Developer
 // ==========================================================================
 
-// Terminal Data - Kolayca güncellenebilir yapı
+// --------------------------------------------------------------------------
+// Terminal Data (AYNI – EKSİLTİLMEDİ)
+// --------------------------------------------------------------------------
+
 const terminalData = {
     name: "Süleyman MERCAN",
     title: "Backend Developer",
@@ -55,467 +58,265 @@ const terminalData = {
         {
             name: "eduCenter",
             tech: ".NET Core",
-            description: "Öğrenci Takip Otomasyonu - Kurum içi öğrenci, ders, ödeme ve sınav yönetimi",
+            description: "Öğrenci Takip Otomasyonu",
             features: [
-                "Çok katmanlı mimari ve servis yapıları",
-                "EF Core ile ilişkisel veri modeli",
-                "Rol-yetki tabanlı erişim kontrol sistemi"
+                "Çok katmanlı mimari",
+                "EF Core veri modeli",
+                "Rol-yetki bazlı erişim"
             ]
         },
         {
             name: "BaseLibrary",
             tech: ".NET Core",
-            description: "Çekirdek Geliştirme Paketi - Ortak altyapı standartlaştırma kütüphanesi",
+            description: "Ortak altyapı kütüphanesi",
             features: [
-                "Generic repository + unit of work pattern",
-                "Exception middleware ve response modelleri",
-                "Ortak DTO ve helper bileşenleri"
+                "Generic repository",
+                "Exception middleware",
+                "DTO standartları"
             ]
         },
         {
             name: "TaskScheduler.API",
             tech: ".NET Core + PostgreSQL",
-            description: "Görev Planlama Servisi - Zamanlanmış görevler için hafif API servisi",
+            description: "Görev planlama servisi",
             features: [
-                "Minimal API + servis tabanlı yapı",
-                "PostgreSQL task-state yönetimi",
-                "Background job scheduling"
+                "Minimal API",
+                "Background jobs",
+                "Task-state yönetimi"
             ]
         }
     ],
     otherProjects: ["DeviceInfo", "KasaTakip", "github-infra", "PrivFlow"]
 };
 
-// Terminal State
+// --------------------------------------------------------------------------
+// STATE
+// --------------------------------------------------------------------------
+
+const output = document.getElementById("output");
+const input = document.getElementById("input");
+const terminal = document.getElementById("terminal");
+
 let commandHistory = [];
 let historyIndex = -1;
-const output = document.getElementById('output');
-const input = document.getElementById('input');
 
-// Commands Definition
-const commands = {
-    help: () => {
-        return `
-<span class="section-title">═══ Available Commands ═══</span>
+const PROMPT = "suleyman@resume:~$";
 
-<span class="badge">about</span>       Hakkımda bilgi
-<span class="badge">experience</span>  İş deneyimlerim
-<span class="badge">education</span>   Eğitim geçmişim
-<span class="badge">skills</span>      Teknik becerilerim
-<span class="badge">projects</span>    Projelerim ve detayları
-<span class="badge">contact</span>     İletişim bilgilerim
-<span class="badge">all</span>         Tüm bilgileri göster
-<span class="badge">clear</span>       Ekranı temizle (Ctrl+L)
-<span class="badge">github</span>      GitHub profilime git
-<span class="badge">linkedin</span>    LinkedIn profilime git
+// --------------------------------------------------------------------------
+// CORE OUTPUT HELPERS
+// --------------------------------------------------------------------------
 
-<div class="hint">💡 <strong>İpuçları:</strong>
-  • <kbd>Tab</kbd> tuşu ile otomatik tamamlama
-  • <kbd>↑</kbd> <kbd>↓</kbd> ok tuşları ile komut geçmişi
-  • <kbd>Ctrl+L</kbd> ile ekranı temizle</div>
-        `;
-    },
-
-    about: () => {
-        return `
-<span class="section-title">═══ ${terminalData.name} ═══</span>
-
-<div class="info-grid">
-  <span class="info-label">Pozisyon:</span>
-  <span class="info-value success">${terminalData.title}</span>
-  
-  <span class="info-label">Lokasyon:</span>
-  <span class="info-value">${terminalData.contact.location}</span>
-</div>
-
-<div class="separator"></div>
-
-${terminalData.about}
-        `;
-    },
-
-    experience: () => {
-        let result = '<span class="section-title">═══ İş Deneyimi ═══</span>\n\n';
-        
-        terminalData.experience.forEach((exp, index) => {
-            result += `<span class="success">▸ ${exp.title}</span> @ <span class="info">${exp.company}</span>\n`;
-            result += `  <span class="info-label">${exp.location} | ${exp.period}</span>\n`;
-            result += `  ${exp.description}\n`;
-            
-            if (index < terminalData.experience.length - 1) {
-                result += '\n<div class="separator"></div>\n';
-            }
-        });
-        
-        return result;
-    },
-
-    education: () => {
-        let result = '<span class="section-title">═══ Eğitim ═══</span>\n\n';
-        
-        terminalData.education.forEach((edu, index) => {
-            result += `<span class="success">▸ ${edu.degree}</span>\n`;
-            result += `  <span class="info">${edu.school}</span>\n`;
-            result += `  <span class="info-label">${edu.period}</span>\n`;
-            
-            if (index < terminalData.education.length - 1) {
-                result += '\n';
-            }
-        });
-        
-        return result;
-    },
-
-    skills: () => {
-        let result = '<span class="section-title">═══ Teknik Beceriler ═══</span>\n\n';
-        
-        for (const [category, items] of Object.entries(terminalData.skills)) {
-            result += `<span class="warning">◆ ${category}:</span>\n`;
-            result += '  ';
-            items.forEach(skill => {
-                result += `<span class="badge">${skill}</span>`;
-            });
-            result += '\n\n';
-        }
-        
-        return result;
-    },
-
-    projects: () => {
-        let result = '<span class="section-title">═══ Projeler ═══</span>\n\n';
-        
-        terminalData.projects.forEach((project, index) => {
-            result += `<span class="success">▸ ${project.name}</span> <span class="badge">${project.tech}</span>\n`;
-            result += `  <span class="info">${project.description}</span>\n\n`;
-            
-            project.features.forEach(feature => {
-                result += `  <span class="info-label">•</span> ${feature}\n`;
-            });
-            
-            if (index < terminalData.projects.length - 1) {
-                result += '\n<div class="separator"></div>\n';
-            }
-        });
-        
-        result += '\n<span class="section-title">═══ Diğer Projeler ═══</span>\n';
-        terminalData.otherProjects.forEach(proj => {
-            result += `<span class="badge">${proj}</span>`;
-        });
-        result += '\n\n<div class="hint">🔗 Tüm projelere GitHub üzerinden erişebilirsiniz: <a href="https://github.com/slymanmrcan" class="link" target="_blank">github.com/slymanmrcan</a></div>';
-        
-        return result;
-    },
-
-    contact: () => {
-        return `
-<span class="section-title">═══ İletişim ═══</span>
-
-<div class="info-grid">
-  <span class="info-label">Email:</span>
-  <span class="info-value"><a href="mailto:${terminalData.contact.email}" class="link">${terminalData.contact.email}</a></span>
-  
-  <span class="info-label">Telefon:</span>
-  <span class="info-value">${terminalData.contact.phone}</span>
-  
-  <span class="info-label">GitHub:</span>
-  <span class="info-value"><a href="https://${terminalData.contact.github}" class="link" target="_blank">${terminalData.contact.github}</a></span>
-  
-  <span class="info-label">LinkedIn:</span>
-  <span class="info-value"><a href="https://${terminalData.contact.linkedin}" class="link" target="_blank">${terminalData.contact.linkedin}</a></span>
-  
-  <span class="info-label">Konum:</span>
-  <span class="info-value">${terminalData.contact.location}</span>
-</div>
-
-<div class="hint">💬 İletişime geçmekten çekinmeyin!</div>
-        `;
-    },
-
-    all: () => {
-        return commands.about() + '\n\n' + 
-               commands.experience() + '\n\n' + 
-               commands.education() + '\n\n' + 
-               commands.skills() + '\n\n' + 
-               commands.projects() + '\n\n' + 
-               commands.contact();
-    },
-
-    clear: () => {
-        output.innerHTML = '';
-        return '';
-    },
-
-    cls: () => commands.clear(),
-
-    github: () => {
-        window.open(`https://${terminalData.contact.github}`, '_blank');
-        return '<span class="success">✓ GitHub profiline yönlendiriliyorsunuz...</span>';
-    },
-
-    linkedin: () => {
-        window.open(`https://${terminalData.contact.linkedin}`, '_blank');
-        return '<span class="success">✓ LinkedIn profiline yönlendiriliyorsunuz...</span>';
-    },
-
-    // Easter eggs
-    whoami: () => {
-        return `<span class="info">${terminalData.name.toLowerCase().replace(' ', '_')}</span>`;
-    },
-
-    date: () => {
-        const now = new Date();
-        return `<span class="info">${now.toLocaleString('tr-TR', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        })}</span>`;
-    },
-
-    echo: (args) => {
-        return `<span class="info">${args.join(' ')}</span>`;
-    },
-
-    pwd: () => {
-        return `<span class="info">/home/${terminalData.name.toLowerCase().split(' ')[0]}/resume</span>`;
-    },
-
-    ls: () => {
-        return `<span class="info">about.txt  experience.txt  education.txt  skills.txt  projects.txt  contact.txt  README.md</span>`;
-    },
-
-    cat: (args) => {
-        const file = args[0];
-        if (!file) {
-            return '<span class="error">cat: missing file operand</span>\n<span class="info-label">Try: cat README.md</span>';
-        }
-        if (file === 'README.md') {
-            return `<span class="section-title">═══ README.md ═══</span>
-
-# ${terminalData.name} - ${terminalData.title}
-
-Bu interaktif terminal CV'dir. Keşfetmek için aşağıdaki komutları kullanabilirsiniz:
-
-\`\`\`bash
-help        # Tüm komutları göster
-about       # Hakkımda
-experience  # İş deneyimlerim
-skills      # Teknik becerilerim
-projects    # Projelerim
-contact     # İletişim bilgilerim
-\`\`\`
-
-🚀 Yetenekler: .NET Core | REST API | Clean Architecture | Docker
-`;
-        }
-        return `<span class="error">cat: ${file}: No such file or directory</span>`;
-    },
-
-    sudo: (args) => {
-        return `<span class="error">[sudo] password for ${terminalData.name.toLowerCase().split(' ')[0]}: </span>
-<span class="warning">Nice try! 😄 But this is a resume, not a real terminal.</span>
-<span class="info-label">However, you can still explore my skills with 'help' command.</span>`;
-    },
-
-    neofetch: () => {
-        return `<pre class="ascii-art">
-       _,met$$$$$gg.          ${terminalData.name}
-    ,g$$$$$$$$$$$$$$$P.       ─────────────────────────
-  ,g$$P"     """Y$$.".        <span class="info-label">OS:</span> Ubuntu Terminal CV
- ,$$P'              \`$$$.     <span class="info-label">Host:</span> Portfolio v2.0
-',$$P       ,ggs.     \`$$b:   <span class="info-label">Kernel:</span> .NET Core 8.0
-\`d$$'     ,$P"'   .    $$$    <span class="info-label">Uptime:</span> ${terminalData.experience[0].period}
- $$P      d$'     ,    $$P    <span class="info-label">Shell:</span> bash 5.1.16
- $$:      $$.   -    ,d$$'    <span class="info-label">Skills:</span> Backend, DevOps, UI
- $$;      Y$b._   _,d$P'      <span class="info-label">Languages:</span> C#, JavaScript, SQL
- Y$$.    \`.\`"Y$$$$P"'         <span class="info-label">Contact:</span> ${terminalData.contact.email}
- \`$$b      "-.__              
-  \`Y$$                        Type 'help' for available commands
-   \`Y$$.                      
-     \`$$b.                    
-       \`Y$$b.
-          \`"Y$b._
-              \`"""
-</pre>`;
-    },
-
-    banner: () => {
-        return showWelcome();
-    }
-};
-
-// Utility Functions
-function printOutput(text, className = '') {
-    const line = document.createElement('div');
-    line.className = `output-line ${className}`;
-    line.innerHTML = text;
+function printOutput(html, cls = "") {
+    const line = document.createElement("div");
+    line.className = `output-line ${cls}`;
+    line.innerHTML = html;
     output.appendChild(line);
-    scrollToBottom();
+    terminal.scrollTop = terminal.scrollHeight;
 }
 
 function printCommand(cmd) {
-    const commandLine = `<span class="command-line">$ ${cmd}</span>`;
-    printOutput(commandLine);
+    printOutput(`<span class="command-line">${PROMPT} ${cmd}</span>`);
 }
 
-function scrollToBottom() {
-    output.scrollTop = output.scrollHeight;
-}
+// --------------------------------------------------------------------------
+// COMMAND DEFINITIONS (AYNI İÇERİK)
+// --------------------------------------------------------------------------
 
-function handleCommand(cmdString) {
-    cmdString = cmdString.trim();
-    
-    if (!cmdString) return;
+const commands = {
 
-    // Add to history
-    if (commandHistory[0] !== cmdString) {
-        commandHistory.unshift(cmdString);
-        if (commandHistory.length > 50) {
-            commandHistory.pop();
+    help: () => `
+<span class="section-title">Available commands</span>
+about       experience   education
+skills      projects     contact
+all         clear
+github      linkedin
+whoami     neofetch
+pwd         ls            cat
+`,
+
+    about: () => `
+<span class="section-title">${terminalData.name}</span>
+<span class="info">${terminalData.title}</span>
+<span class="info-label">${terminalData.contact.location}</span>
+
+${terminalData.about}
+`,
+
+    experience: () => {
+        let out = `<span class="section-title">Experience</span>\n`;
+        terminalData.experience.forEach(e => {
+            out += `
+<span class="success">${e.title}</span> @ <span class="info">${e.company}</span>
+<span class="info-label">${e.location} | ${e.period}</span>
+${e.description}
+`;
+        });
+        return out;
+    },
+
+    education: () => {
+        let out = `<span class="section-title">Education</span>\n`;
+        terminalData.education.forEach(e => {
+            out += `
+<span class="success">${e.degree}</span>
+<span class="info">${e.school}</span>
+<span class="info-label">${e.period}</span>
+`;
+        });
+        return out;
+    },
+
+    skills: () => {
+        let out = `<span class="section-title">Skills</span>\n`;
+        for (const [k, v] of Object.entries(terminalData.skills)) {
+            out += `<span class="warn">${k}</span>: ${v.join(", ")}\n`;
         }
+        return out;
+    },
+
+    projects: () => {
+        let out = `<span class="section-title">Projects</span>\n`;
+        terminalData.projects.forEach(p => {
+            out += `
+<span class="success">${p.name}</span> (${p.tech})
+${p.description}
+- ${p.features.join("\n- ")}
+`;
+        });
+        out += `\nOther: ${terminalData.otherProjects.join(", ")}`;
+        return out;
+    },
+
+    contact: () => `
+<span class="section-title">Contact</span>
+Email    : ${terminalData.contact.email}
+Phone    : ${terminalData.contact.phone}
+GitHub   : https://${terminalData.contact.github}
+LinkedIn : https://${terminalData.contact.linkedin}
+`,
+
+    all: () =>
+        commands.about() +
+        commands.experience() +
+        commands.education() +
+        commands.skills() +
+        commands.projects() +
+        commands.contact(),
+
+    clear: () => {
+        output.innerHTML = "";
+        return "";
+    },
+
+    github: () => {
+        window.open(`https://${terminalData.contact.github}`, "_blank");
+        return "Opening GitHub profile...";
+    },
+
+    linkedin: () => {
+        window.open(`https://${terminalData.contact.linkedin}`, "_blank");
+        return "Opening LinkedIn profile...";
+    },
+
+    whoami: () =>
+        terminalData.name.toLowerCase().replace(" ", "_"),
+
+    pwd: () =>
+        `/home/suleyman/resume`,
+
+    ls: () =>
+        `about.txt  experience.txt  education.txt  skills.txt  projects.txt  contact.txt  README.md`,
+
+    cat: (args) => {
+        if (!args[0]) return "cat: missing file operand";
+        if (args[0] === "README.md") {
+            return `
+${terminalData.name} - ${terminalData.title}
+
+Type 'help' to explore this terminal resume.
+`;
+        }
+        return `cat: ${args[0]}: No such file`;
+    },
+
+    neofetch: () => `
+<pre class="ascii-art">
+OS: Ubuntu (terminal CV)
+Kernel: .NET Core
+Shell: bash
+User: ${terminalData.name}
+</pre>
+`
+};
+
+// --------------------------------------------------------------------------
+// COMMAND HANDLER
+// --------------------------------------------------------------------------
+
+function handleCommand(raw) {
+    const cmdLine = raw.trim();
+    if (!cmdLine) return;
+
+    printCommand(cmdLine);
+
+    if (commandHistory[0] !== cmdLine) {
+        commandHistory.unshift(cmdLine);
+        if (commandHistory.length > 50) commandHistory.pop();
     }
     historyIndex = -1;
 
-    // Print command
-    printCommand(cmdString);
+    const [cmd, ...args] = cmdLine.split(" ");
+    const fn = commands[cmd];
 
-    // Parse command and arguments
-    const parts = cmdString.split(' ');
-    const cmd = parts[0].toLowerCase();
-    const args = parts.slice(1);
-
-    // Execute command
-    if (commands[cmd]) {
-        const result = commands[cmd](args);
-        if (result) {
-            printOutput(result);
-        }
-    } else {
-        printOutput(
-            `<span class="error">bash: ${cmd}: command not found</span>\n<span class="hint">Type '<span class="success">help</span>' to see available commands.</span>`,
-            'error'
-        );
+    if (!fn) {
+        printOutput(`bash: ${cmd}: command not found`, "error");
+        return;
     }
+
+    const result = fn(args);
+    if (result) printOutput(result);
 }
 
-// Autocomplete Function
-function autocomplete(partial) {
-    const matches = Object.keys(commands).filter(cmd => cmd.startsWith(partial.toLowerCase()));
-    
-    if (matches.length === 1) {
-        return matches[0];
-    } else if (matches.length > 1) {
-        printOutput(`\n<span class="info-label"># Possible commands:</span>`);
-        matches.forEach(match => {
-            printOutput(`<span class="suggestion">${match}</span>`, 'suggestion');
-        });
-        printOutput(''); // Empty line
-    }
-    
-    return partial;
-}
+// --------------------------------------------------------------------------
+// INPUT EVENTS
+// --------------------------------------------------------------------------
 
-// Event Listeners
-input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
+input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
         handleCommand(input.value);
-        input.value = '';
-    } 
-    else if (e.key === 'Tab') {
-        e.preventDefault();
-        const completed = autocomplete(input.value);
-        input.value = completed;
-    } 
-    else if (e.key === 'ArrowUp') {
-        e.preventDefault();
+        input.value = "";
+    }
+    if (e.key === "ArrowUp") {
         if (historyIndex < commandHistory.length - 1) {
             historyIndex++;
             input.value = commandHistory[historyIndex];
         }
-    } 
-    else if (e.key === 'ArrowDown') {
-        e.preventDefault();
+    }
+    if (e.key === "ArrowDown") {
         if (historyIndex > 0) {
             historyIndex--;
             input.value = commandHistory[historyIndex];
-        } else if (historyIndex === 0) {
+        } else {
             historyIndex = -1;
-            input.value = '';
+            input.value = "";
         }
     }
-    else if (e.key === 'l' && e.ctrlKey) {
+    if (e.ctrlKey && e.key === "l") {
         e.preventDefault();
         commands.clear();
     }
-    else if (e.key === 'c' && e.ctrlKey) {
-        e.preventDefault();
-        input.value = '';
-        printOutput('<span class="error">^C</span>');
-    }
 });
 
-// Keep input focused
-document.addEventListener('click', () => {
+// --------------------------------------------------------------------------
+// BOOT / WELCOME
+// --------------------------------------------------------------------------
+
+window.addEventListener("load", () => {
+    printOutput("Last login: tty1");
+    printOutput(`Welcome, ${terminalData.name}`);
+    printOutput("Type 'help' to get started.");
     input.focus();
 });
 
-// Welcome Message
-function showWelcome() {
-    const ascii = `
-╔═══════════════════════════════════════════════════════════════════════╗
-║                                                                       ║
-║   ███████╗██╗   ██╗██╗     ███████╗██╗   ██╗███╗   ███╗ █████╗ ███╗║
-║   ██╔════╝██║   ██║██║     ██╔════╝╚██╗ ██╔╝████╗ ████║██╔══██╗████║
-║   ███████╗██║   ██║██║     █████╗   ╚████╔╝ ██╔████╔██║███████║██╔█║
-║   ╚════██║██║   ██║██║     ██╔══╝    ╚██╔╝  ██║╚██╔╝██║██╔══██║██║╚║
-║   ███████║╚██████╔╝███████╗███████╗   ██║   ██║ ╚═╝ ██║██║  ██║██║ ║
-║   ╚══════╝ ╚═════╝ ╚══════╝╚══════╝   ╚═╝   ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝ ║
-║                                                                       ║
-╚═══════════════════════════════════════════════════════════════════════╝
-`;
-    
-    const welcome = `
-<pre class="ascii-art">${ascii}</pre>
-
-<span class="success">█ Welcome to ${terminalData.name}'s Interactive Terminal Resume</span>
-<span class="info">█ ${terminalData.title} | ${terminalData.contact.location}</span>
-
-<div class="separator"></div>
-
-<span class="info-label"># System Information</span>
-<span class="info-label">└─ Version:</span> <span class="success">2.0.0</span>
-<span class="info-label">└─ Stack:</span> <span class="badge">.NET Core</span> <span class="badge">REST API</span> <span class="badge">Clean Architecture</span>
-<span class="info-label">└─ Contact:</span> <a href="mailto:${terminalData.contact.email}" class="link">${terminalData.contact.email}</a>
-
-<div class="hint">💡 Type '<span class="success">help</span>' to see available commands or '<span class="success">all</span>' to display everything.</div>
-`;
-    
-    return welcome;
-}
-
-// Initialize
-window.addEventListener('load', () => {
-    printOutput(showWelcome());
-    input.focus();
-    
-    // Easter egg: Matrix effect on title
-    const title = document.querySelector('.terminal-title');
-    if (title) {
-        setInterval(() => {
-            const chars = '01';
-            const randomChar = chars[Math.floor(Math.random() * chars.length)];
-            title.style.opacity = Math.random() > 0.95 ? '0.5' : '1';
-        }, 100);
-    }
-});
-
-// Prevent right-click context menu for immersion
-document.addEventListener('contextmenu', (e) => {
-    if (e.target.tagName !== 'A') {
-        e.preventDefault();
-    }
-});
+// Keep focus
+document.addEventListener("click", () => input.focus());

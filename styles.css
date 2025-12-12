@@ -28,14 +28,16 @@ body {
 }
 
 .terminal {
-    width: 100vw;
-    height: 100vh;
+    width:   100vw;
+    height:  100vh;
+    padding: 12px;
 }
 .terminal-body {
     padding: 8px 10px;
     height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
+    border: 1px solid #1e1e1e;
 }
 
 .output-line {

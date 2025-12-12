@@ -26,7 +26,18 @@ body {
     height: 100vh;
     overflow: hidden;
 }
+.section-title {
+    font-weight: bold;
+    margin: 6px 0 4px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 2px;
+}
 
+.info-label {
+    color: #777;
+    margin-top: 6px;
+    display: block;
+}
 .terminal {
     width:   100vw;
     height:  100vh;

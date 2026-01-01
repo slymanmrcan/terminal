@@ -427,3 +427,13 @@ window.addEventListener("load", () => {
 
 // Keep focus
 document.addEventListener("click", () => input.focus());
+
+// Mobil klavye uyumluluğu için
+if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", () => {
+        // Klavye açıldığında/kapandığında en alta kaydır
+        setTimeout(() => {
+            terminal.scrollTop = terminal.scrollHeight;
+        }, 100);
+    });
+}

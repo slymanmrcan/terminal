@@ -1,122 +1,167 @@
 /* Terminal Renkleri */
 :root {
-    --bg: #000;
-    --fg: #00ff00;
-    --fg-dim: #00aa00;
-    --error: #ff5555;
-    --info: #5fd7ff;
-    --warn: #ffaa00;
-    --success: #33ff33; /* Yeni Başarı Rengi */
+  --bg: #000;
+  --fg: #00ff00;
+  --fg-dim: #00aa00;
+  --error: #ff5555;
+  --info: #5fd7ff;
+  --warn: #ffaa00;
+  --success: #33ff33; /* Yeni Başarı Rengi */
 }
 
 /* reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    animation: none !important;
-    text-shadow: none !important;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  animation: none !important;
+  text-shadow: none !important;
 }
 
 body {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: "JetBrains Mono", "Fira Code", monospace;
-    font-size: 13px;
-    line-height: 1.4;
-    overflow-y: scroll; /* Terminal içeriği taştığında tüm sayfanın kaydırması için */
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  overflow-y: scroll; /* Terminal içeriği taştığında tüm sayfanın kaydırması için */
 }
 
 /* Terminal Kapsayıcısı ve Merkezleme */
 .terminal {
-    width: 90%; /* Sayfanın %90'ını kapla */
-    max-width: 900px; /* Maksimum genişlik sınırı */
-    min-height: 100vh; /* Sayfa boyu kadar minimum yükseklik */
-    margin: 0 auto; /* Yatayda ortala */
-    padding: 20px 10px; /* Üst/Alt padding'i artırarak kenardan uzaklaştır */
-    display: flex; 
-    flex-direction: column;
+  width: 90%; /* Sayfanın %90'ını kapla */
+  max-width: 900px; /* Maksimum genişlik sınırı */
+  min-height: 100vh; /* Sayfa boyu kadar minimum yükseklik */
+  margin: 0 auto; /* Yatayda ortala */
+  padding: 20px 10px; /* Üst/Alt padding'i artırarak kenardan uzaklaştır */
+  display: flex;
+  flex-direction: column;
 }
 
 .terminal-body {
-    flex-grow: 1; /* Mevcut alanı doldur */
-    padding: 10px 15px; /* Yatay padding artırıldı */
-    overflow-y: auto;
-    overflow-x: hidden;
-    border: 1px solid var(--fg-dim); /* Daha tutarlı sınır rengi */
+  flex-grow: 1; /* Mevcut alanı doldur */
+  padding: 10px 15px; /* Yatay padding artırıldı */
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid var(--fg-dim); /* Daha tutarlı sınır rengi */
 }
 
 /* Çıktı ve Giriş Satırları */
 .output-line {
-    margin: 0;
-    padding: 0;
-    line-height: 1.4;
-    white-space: pre-wrap; /* Metinlerin alt satıra inmesini sağlar */
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+  white-space: pre-wrap; /* Metinlerin alt satıra inmesini sağlar */
 }
 
 .section-title {
-    font-weight: bold;
-    margin: 6px 0 4px;
-    border-bottom: 1px solid var(--fg-dim); /* Daha tutarlı alt çizgi rengi */
-    padding-bottom: 2px;
+  font-weight: bold;
+  margin: 6px 0 4px;
+  border-bottom: 1px solid var(--fg-dim); /* Daha tutarlı alt çizgi rengi */
+  padding-bottom: 2px;
 }
 
 .info-label {
-    color: var(--fg-dim); /* Daha uyumlu renk */
-    margin-top: 4px; 
-    margin-bottom: 4px; /* Altına boşluk eklendi */
-    display: block;
+  color: var(--fg-dim); /* Daha uyumlu renk */
+  margin-top: 4px;
+  margin-bottom: 4px; /* Altına boşluk eklendi */
+  display: block;
 }
 
 /* Banner, ascii vs varsa minimal */
 .ascii-art {
-    font-size: 13px;
-    line-height: 1.1; /* Daha kompakt görünüm */
-    margin: 4px 0;
+  font-size: 13px;
+  line-height: 1.1; /* Daha kompakt görünüm */
+  margin: 4px 0;
 }
 
-
 .prompt {
-    margin-right: 6px;
+  margin-right: 6px;
 }
 
 .input-line {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--fg);
-    font-family: inherit;
-    font-size: inherit;
-    flex: 1;
-    caret-color: var(--fg);
-    font-variant-ligatures: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: inherit;
+  flex: 1;
+  caret-color: var(--fg);
+  font-variant-ligatures: none;
 }
 
 /* colors */
-.error { color: var(--error); }
-.info { color: var(--info); }
-.warn { color: var(--warn); }
-.dim { color: var(--fg-dim); }
-.success { color: var(--success); } /* Yeni Tanım */
+.error {
+  color: var(--error);
+}
+.info {
+  color: var(--info);
+}
+.warn {
+  color: var(--warn);
+}
+.dim {
+  color: var(--fg-dim);
+}
+.success {
+  color: var(--success);
+} /* Yeni Tanım */
 
 ::selection {
-    background: var(--fg);
-    color: var(--bg);
+  background: var(--fg);
+  color: var(--bg);
 }
 
 /* hide scrollbar */
 .terminal-body::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .noscript {
-    color: var(--fg);
-    background: #000;
-    padding: 20px;
-    font-family: monospace;
+  color: var(--fg);
+  background: #000;
+  padding: 20px;
+  font-family: monospace;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+  body {
+    font-size: 14px; /* Slightly larger text for readability */
+  }
+
+  .terminal {
+    width: 100%;
+    padding: 10px 4px; /* Reduce padding to maximize width */
+    max-width: none;
+  }
+
+  .terminal-body {
+    padding: 5px; /* Minimal padding */
+  }
+
+  .ascii-art {
+    font-size: 8px; /* Shrink ASCII art to fit */
+    white-space: pre; /* Keep formatting */
+    overflow-x: hidden; /* Prevent horizontal scroll just for logo */
+  }
+
+  .input-line {
+    flex-direction: column; /* Stack prompt and input on very narrow screens if needed */
+    align-items: stretch;
+  }
+
+  .prompt {
+    margin-bottom: 2px;
+  }
+
+  .input {
+    width: 100%;
+  }
 }

@@ -1,16 +1,18 @@
 const terminalData = {
   name: "Süleyman MERCAN",
-  title: "Cloud & DevOps Engineer",
+  title: "Cloud & DevOps Practitioner",
   contact: {
     phone: "+90 551 952 45 00",
     email: "slymanmrcan@gmail.com",
     github: "github.com/slymanmrcan",
     linkedin: "linkedin.com/in/slymanmrcan",
-    website: "slymnmrcn.github.io",
+    website: "slymanmrcan.github.io/terminal",
     location: "Turkey (Remote-friendly)",
   },
+
   about:
-    "Cloud and DevOps engineer with practical experience in Linux server administration, containerization, and cloud infrastructure management. Hands-on expertise with Oracle Cloud VPS environments, Docker containerization, networking fundamentals, and CI/CD workflows. Focus on infrastructure automation, deployment pipelines, and production system reliability.\n\nWork Approach:\n• Infrastructure-first mindset with focus on reliability and scalability\n• Automation-driven workflows to reduce manual intervention\n• Strong problem-solving skills for system troubleshooting\n• Continuous learning in cloud technologies and DevOps practices",
+    "Cloud and DevOps practitioner with practical experience in Linux server administration, containerized deployments, and cloud infrastructure management. Hands-on work with Oracle Cloud VPS environments, Docker containerization, networking fundamentals, and CI/CD automation.\n\nWork Approach:\n• Infrastructure-first mindset focused on reliability\n• Automation-driven deployment workflows\n• Strong troubleshooting for production systems\n• Continuous learning in cloud and DevOps tooling",
+
   experience: [
     {
       title: "Cloud & DevOps Projects (Independent)",
@@ -18,7 +20,7 @@ const terminalData = {
       location: "Remote",
       period: "05/2022 - Present",
       description:
-        "Managed Oracle Cloud VPS instances, configured Linux servers, implemented Docker-based deployments, set up CI/CD pipelines, and monitored system performance.",
+        "Provisioned Oracle Cloud VPS servers, configured hardened Linux environments, deployed containerized applications with Docker Compose, built CI/CD pipelines with GitHub Actions and managed Nginx reverse proxy setups for production workloads.",
     },
     {
       title: "Developer",
@@ -26,9 +28,10 @@ const terminalData = {
       location: "Konya",
       period: "09/2021 - 05/2022",
       description:
-        "Developed web applications using .NET Core, collaborated on API integration, and gained foundational understanding of server-side operations.",
+        "Developed web applications with .NET Core and collaborated on API integrations while gaining practical experience with server-side environments and deployment workflows.",
     },
   ],
+
   education: [
     {
       degree: "Mathematics & Computer Science",
@@ -41,62 +44,91 @@ const terminalData = {
       period: "2015 - 2018",
     },
   ],
+
   skills: {
-    Cloud: ["Oracle Cloud (OCI)", "Linux Server", "VPS Management", "Security"],
-    DevOps: ["Docker", "GitHub Actions", "Terraform", "Nginx"],
-    Backend: ["PostgreSQL", "REST API", ".NET Core"],
+    Cloud: [
+      "Oracle Cloud (OCI)",
+      "Linux Server Administration",
+      "VPS Management",
+      "Security Hardening",
+    ],
+    DevOps: [
+      "Docker",
+      "GitHub Actions",
+      "Terraform",
+      "Nginx",
+      "Prometheus",
+      "Grafana",
+    ],
+    Backend: ["Go", "PostgreSQL", "REST API"],
     Network: ["TCP/IP", "DNS", "Firewall", "Routing"],
   },
+
   projects: [
     {
-      name: "Infrastructure (OCI)",
-      tech: "OCI, Docker, Nginx, PG",
-      description: "Production Environment Setup",
+      name: "GitHub Organization Infrastructure",
+      slug: "github-infra",
+      tech: "Terraform, GitHub API, GitHub Actions",
+      description: "Infrastructure as Code for managing GitHub organizations",
+      link: "https://github.com/Bilgisayar-Kavramlari-Toplulugu/github-infra",
       features: [
-        "Provisioned OCI VPS",
-        "Docker deployment strategy",
-        "Nginx reverse proxy + SSL",
-        "Auto DB backups",
+        "Repository provisioning via Terraform",
+        "Team and permission automation",
+        "PR validation with GitHub Actions",
+        "Open source infrastructure management",
       ],
     },
     {
-      name: "CI/CD Infrastructure",
-      tech: "GitHub Actions",
-      description: "Automated Deployment Pipelines",
+      name: "VPS Hardening & Monitoring Guide",
+      slug: "server-guide",
+      tech: "Linux, Docker, Nginx, Prometheus, Grafana",
+      description: "Production server setup documentation (living handbook)",
+      link: "https://suleymanmrcn.github.io/server-guide/",
       features: [
-        "Multi-env deployment",
-        "Auto testing & scanning",
-        "Reduced deployment time",
+        "Linux security hardening recipes",
+        "Docker deployment patterns",
+        "Nginx reverse proxy + SSL guidance",
+        "Monitoring and runbooks",
       ],
     },
     {
-      name: "Terraform Infra",
-      tech: "Terraform",
-      description: "IaC for GitHub Repos",
+      name: "RSS Aggregator Service",
+      slug: "techfeed",
+      tech: "Go, Docker, Nginx",
+      description: "Backend service that aggregates RSS feeds",
+      link: "https://techfeed.is-app.com",
       features: [
-        "Repository standardization",
-        "In collab with Scrum team",
-        "Open Source",
+        "RSS parsing and aggregation",
+        "Title-based filtering",
+        "Docker container deployment",
+        "Production deployment on OCI VPS",
       ],
     },
   ],
-  otherProjects: ["github-infra", "Containerized Apps", "Log Management"],
+
+  otherProjects: ["containerized apps", "log monitoring", "deployment automation"],
+
   certifications: [
     { title: "Docker Temelleri", issuer: "BTK Akademi", id: "wmlFJO1z69" },
     { title: "DevOps Sertifikası", issuer: "Optivisdom", id: "#5088da8e..." },
-    {
-      title: "İleri Ağ Teknolojileri",
-      issuer: "BTK Akademi",
-      id: "oJpS7GOPxO",
-    },
+    { title: "İleri Ağ Teknolojileri", issuer: "BTK Akademi", id: "oJpS7GOPxO" },
   ],
+
   languages: [
     { lang: "Turkish", level: "Native" },
-    { lang: "English", level: "Intermediate" },
+    { lang: "English", level: "A2 (Technical Documentation)" },
   ],
+
+  // İstersen buraya gerçek PDF linkini koy
+  assets: {
+    pdf: "", // örn: "https://.../Suleyman_Mercan_CV.pdf"
+  },
 };
 
-// Yeni: ls çıktısı için dosya boyutları (ls -l benzeri çıktı için)
+// --------------------------------------------------------------------------
+// FILE SIZES (ls)
+// --------------------------------------------------------------------------
+
 const fileSizes = {
   "about.txt": "1.4K",
   "experience.txt": "1.8K",
@@ -106,6 +138,9 @@ const fileSizes = {
   "certifications.txt": "1.1K",
   "languages.txt": "400B",
   "contact.txt": "500B",
+  "resume.txt": "900B",
+  "stack.txt": "700B",
+  "links.txt": "450B",
   "README.md": "350B",
 };
 
@@ -121,9 +156,10 @@ let commandHistory = [];
 let historyIndex = -1;
 
 const PROMPT = "suleyman@resume:~$";
+const bootTime = Date.now();
 
 // --------------------------------------------------------------------------
-// CORE OUTPUT HELPERS
+// OUTPUT HELPERS
 // --------------------------------------------------------------------------
 
 function printOutput(html, cls = "") {
@@ -131,7 +167,6 @@ function printOutput(html, cls = "") {
   line.className = `output-line ${cls}`;
   line.innerHTML = html;
   output.appendChild(line);
-  // Kaydırma (scrolling) iyileştirmesi
   terminal.scrollTop = terminal.scrollHeight;
 }
 
@@ -139,19 +174,93 @@ function printCommand(cmd) {
   printOutput(`<span class="command-line">${PROMPT} ${cmd}</span>`);
 }
 
+function openUrl(url) {
+  try {
+    window.open(url, "_blank", "noopener,noreferrer");
+  } catch (e) {
+    // bazı ortamlarda popup bloklanabilir
+  }
+}
+
+function padRight(str, n) {
+  return (str + " ".repeat(n)).slice(0, n);
+}
+
+function normalizeKey(s) {
+  return (s || "").toLowerCase().trim();
+}
+
 // --------------------------------------------------------------------------
-// COMMAND DEFINITIONS
+// MINI MAN PAGES
+// --------------------------------------------------------------------------
+
+const manPages = {
+  help: "List available commands.",
+  about: "Show profile summary.",
+  experience: "Show work experience.",
+  education: "Show education history.",
+  skills: "Show technical skills.",
+  projects: "Show projects list.",
+  project: "Open a project by index: project 1 | project 2 | project 3",
+  repo: "Open a project/repo by slug: repo github-infra | repo server-guide | repo techfeed",
+  links: "Show all links (GitHub, LinkedIn, Website, Email).",
+  contact: "Show contact info.",
+  resume: "One-screen resume summary for quick scan.",
+  stack: "Detailed stack overview (Cloud/DevOps/Backend/Network).",
+  open: "Open link: open github | open linkedin | open web | open mail",
+  download: "Open CV PDF if available.",
+  clear: "Clear terminal output.",
+  ls: "List files (fake directory view).",
+  cat: "Read file: cat about.txt | cat resume.txt | cat stack.txt | cat links.txt",
+  whoami: "Print username.",
+  pwd: "Print working directory.",
+  neofetch: "Show system-style summary.",
+  uname: "Show kernel info (fun).",
+  uptime: "Show uptime since page load.",
+  date: "Print current date/time.",
+  banner: "Print welcome banner again.",
+  "sudo hire-me": "Fun command that prints a hire pitch.",
+};
+
+// --------------------------------------------------------------------------
+// COMMANDS
 // --------------------------------------------------------------------------
 
 const commands = {
   help: () => `
 <span class="section-title">Available commands</span>
 about       experience    education
-skills      projects      certifications
-languages   contact       all
+skills      projects      project
+stack       resume        links
+certifications  languages  contact
+open        repo          download
 clear       github        linkedin
 <span class="info">cat [file]</span>  <span class="info">ls</span>            whoami
-neofetch    pwd
+neofetch    pwd           uname
+uptime      date          banner
+<span class="info">man [command]</span>  <span class="info">sudo hire-me</span>
+`,
+
+  man: (args) => {
+    const key = normalizeKey(args[0]);
+    if (!key) return "<span class='error'>man: missing command</span>";
+    const page = manPages[key] || manPages[args.join(" ")] || null;
+    if (!page) return `<span class='error'>man: no manual entry for ${args[0]}</span>`;
+    return `<span class="section-title">MAN ${args.join(" ")}</span>\n${page}`;
+  },
+
+  banner: () => `
+<pre class="ascii-art">
+   ________              __      __  ____  _  __
+  / ____/ /___  __  ____/ /___  / / / __ \\/ |/ /
+ / /   / / __ \\/ / / / __  / / / / / /_/ /    /
+/ /___/ / /_/ / /_/ / /_/ / /_/ / / _, _/ /|  /
+\\____/_/\\____/\\__,_/\\__,_/\\__, / /_/ |_/_/ |_/
+                         /____/
+
+<span class="info">${terminalData.name}</span>  —  <span class="warn">${terminalData.title}</span>
+<span class="dim">Type</span> <span class="success">help</span> <span class="dim">to explore.</span>
+</pre>
 `,
 
   about: () => `
@@ -194,31 +303,97 @@ ${e.description}
     return out;
   },
 
+  stack: () => `
+<span class="section-title">Stack</span>
+
+<span class="warn">Cloud</span>
+- Oracle Cloud (OCI): VPS provisioning, networking basics, security hardening
+
+<span class="warn">Linux & Security</span>
+- Ubuntu/Debian admin, SSH hardening, firewall, Fail2ban
+- Nginx reverse proxy, SSL/TLS with Certbot
+
+<span class="warn">Containers & Delivery</span>
+- Docker, Docker Compose, image optimization, env-based configs
+- GitHub Actions: build/deploy automation, PR validation patterns
+
+<span class="warn">Observability</span>
+- Prometheus + Grafana fundamentals
+
+<span class="warn">Backend</span>
+- Go services, REST API basics, PostgreSQL ops (backup/restore)
+`,
+
   projects: () => {
     let out = `<span class="section-title">Projects</span>\n`;
-    terminalData.projects.forEach((p) => {
+    terminalData.projects.forEach((p, i) => {
       out += `
-<span class="success">${p.name}</span> (<span class="dim">${p.tech}</span>)
+<span class="success">${i + 1}. ${p.name}</span> (<span class="dim">${p.tech}</span>)
 ${p.description}
 - ${p.features.join("\n- ")}
+<span class="info">open:</span> <span class="dim">project ${i + 1}</span>  |  <span class="info">repo:</span> <span class="dim">repo ${p.slug}</span>
 `;
     });
-    out += `\nOther: <span class="dim">${terminalData.otherProjects.join(
-      ", "
-    )}</span>`;
+    out += `\nOther: <span class="dim">${terminalData.otherProjects.join(", ")}</span>`;
     return out;
   },
 
-  contact: () => {
-    // Çıktıyı hizalamak için boşlukları kullanarak formatlama
-    const email = `Email    : <span class="info">${terminalData.contact.email}</span>`;
-    const phone = `Phone    : <span class="info">${terminalData.contact.phone}</span>`;
-    const web = `Web      : <span class="info">https://${terminalData.contact.website}</span>`;
-    const github = `GitHub   : <span class="info">https://${terminalData.contact.github}</span>`;
-    const linkedin = `LinkedIn : <span class="info">https://${terminalData.contact.linkedin}</span>`;
-
-    return `<span class="section-title">Contact</span>\n${email}\n${phone}\n${web}\n${github}\n${linkedin}`;
+  project: (args) => {
+    const idx = parseInt(args[0], 10);
+    if (!idx || idx < 1 || idx > terminalData.projects.length) {
+      return "<span class='error'>usage: project 1 | project 2 | project 3</span>";
+    }
+    const p = terminalData.projects[idx - 1];
+    openUrl(p.link);
+    return `Opening <span class="success">${p.name}</span>...`;
   },
+
+  repo: (args) => {
+    const slug = normalizeKey(args[0]);
+    if (!slug) return "<span class='error'>usage: repo github-infra|server-guide|techfeed</span>";
+    const p = terminalData.projects.find((x) => normalizeKey(x.slug) === slug);
+    if (!p) return `<span class='error'>repo: ${args[0]}: not found</span>`;
+    openUrl(p.link);
+    return `Opening <span class="success">${p.slug}</span>...`;
+  },
+
+  links: () => `
+<span class="section-title">Links</span>
+Web      : <span class="info">https://${terminalData.contact.website}</span>
+GitHub   : <span class="info">https://${terminalData.contact.github}</span>
+LinkedIn : <span class="info">https://${terminalData.contact.linkedin}</span>
+Email    : <span class="info">mailto:${terminalData.contact.email}</span>
+`,
+
+  resume: () => `
+<span class="section-title">Resume (Quick)</span>
+<span class="success">${terminalData.name}</span> — <span class="info">${terminalData.title}</span>
+<span class="info-label">${terminalData.contact.location}</span>
+
+<span class="warn">Highlights</span>
+- OCI VPS provisioning + Linux hardening (SSH, firewall, Fail2ban)
+- Docker Compose deployments, Nginx reverse proxy + SSL (Certbot)
+- CI/CD automation with GitHub Actions
+- Observability fundamentals (Prometheus, Grafana)
+- Go services + PostgreSQL ops
+
+<span class="warn">Top Projects</span>
+- GitHub org infra via Terraform: <span class="dim">repo github-infra</span>
+- Server hardening guide: <span class="dim">repo server-guide</span>
+- RSS Aggregator (Go): <span class="dim">repo techfeed</span>
+
+<span class="warn">Links</span>
+- <span class="dim">open web</span> | <span class="dim">open github</span> | <span class="dim">open linkedin</span> | <span class="dim">open mail</span>
+`,
+
+  contact: () => `
+<span class="section-title">Contact</span>
+Email    : <span class="info">${terminalData.contact.email}</span>
+Phone    : <span class="info">${terminalData.contact.phone}</span>
+Web      : <span class="info">https://${terminalData.contact.website}</span>
+GitHub   : <span class="info">https://${terminalData.contact.github}</span>
+LinkedIn : <span class="info">https://${terminalData.contact.linkedin}</span>
+`,
 
   certifications: () => {
     let out = `<span class="section-title">Certifications</span>\n`;
@@ -240,11 +415,14 @@ ${p.description}
   },
 
   all: () =>
+    commands.banner() +
     commands.about() +
     commands.experience() +
     commands.education() +
     commands.skills() +
     commands.projects() +
+    commands.certifications() +
+    commands.languages() +
     commands.contact(),
 
   clear: () => {
@@ -252,31 +430,59 @@ ${p.description}
     return "";
   },
 
+  open: (args) => {
+    const target = normalizeKey(args[0]);
+    if (!target) return "<span class='error'>usage: open github|linkedin|web|mail</span>";
+
+    if (target === "github") {
+      openUrl(`https://${terminalData.contact.github}`);
+      return "Opening GitHub...";
+    }
+    if (target === "linkedin") {
+      openUrl(`https://${terminalData.contact.linkedin}`);
+      return "Opening LinkedIn...";
+    }
+    if (target === "web" || target === "website") {
+      openUrl(`https://${terminalData.contact.website}`);
+      return "Opening website...";
+    }
+    if (target === "mail" || target === "email") {
+      openUrl(`mailto:${terminalData.contact.email}`);
+      return "Opening mail client...";
+    }
+    return `<span class='error'>open: unknown target '${args[0]}'</span>`;
+  },
+
+  download: () => {
+    if (terminalData.assets.pdf) {
+      openUrl(terminalData.assets.pdf);
+      return "Opening CV PDF...";
+    }
+    return `<span class="warn">No PDF linked yet.</span>\nSet <span class="dim">terminalData.assets.pdf</span> to your CV PDF URL.`;
+  },
+
   github: () => {
-    window.open(`https://${terminalData.contact.github}`, "_blank");
+    openUrl(`https://${terminalData.contact.github}`);
     return "Opening GitHub profile...";
   },
 
   linkedin: () => {
-    window.open(`https://${terminalData.contact.linkedin}`, "_blank");
+    openUrl(`https://${terminalData.contact.linkedin}`);
     return "Opening LinkedIn profile...";
   },
 
-  whoami: () => terminalData.name.toLowerCase().replace(" ", "_"),
+  whoami: () =>
+    terminalData.name
+      .toLowerCase()
+      .replace(/\s+/g, "_")
+      .replace(/[^a-z0-9_]/g, ""),
 
   pwd: () => `<span class="info">/home/${commands.whoami()}/resume</span>`,
 
   ls: () => {
     let out = "";
-    const files = Object.keys(fileSizes);
-
-    // Output format: [Size] [File Name]
-    files.forEach((file) => {
-      // padEnd ile boyut bilgisini hizalıyoruz (mono-boşluklu fontlarda işe yarar)
-      out += `<span class="dim">${fileSizes[file].padEnd(
-        6,
-        " "
-      )}</span> <span class="success">${file}</span>\n`;
+    Object.keys(fileSizes).forEach((file) => {
+      out += `<span class="dim">${padRight(fileSizes[file], 6)}</span> <span class="success">${file}</span>\n`;
     });
     return out;
   },
@@ -284,58 +490,77 @@ ${p.description}
   cat: (args) => {
     if (!args[0]) return "<span class='error'>cat: missing file operand</span>";
 
-    const file = args[0].toLowerCase();
-
-    // Dosya mevcut mu kontrol et
-    if (!fileSizes.hasOwnProperty(args[0])) {
-      return `<span class='error'>cat: ${args[0]}: No such file or directory</span>`;
+    const requested = args[0];
+    const keyMatch = Object.keys(fileSizes).find(
+      (f) => f.toLowerCase() === requested.toLowerCase()
+    );
+    if (!keyMatch) {
+      return `<span class='error'>cat: ${requested}: No such file or directory</span>`;
     }
 
-    // İstenen dosya adını komut adına çevir
-    const cmdName = file.replace(".txt", "").replace(".md", "");
+    const cmdName = keyMatch.toLowerCase().replace(".txt", "").replace(".md", "");
 
     if (cmdName === "readme") {
       return `
 ${terminalData.name} - ${terminalData.title}
 
 Type 'help' to explore this terminal resume.
+Try: resume, projects, repo github-infra, stack
 `;
     }
 
-    // İlgili komutun çıktısını al (örn: cat about.txt -> commands.about())
-    if (
-      commands[cmdName] &&
-      [
-        "about",
-        "experience",
-        "education",
-        "skills",
-        "projects",
-        "certifications",
-        "languages",
-        "contact",
-      ].includes(cmdName)
-    ) {
-      return commands[cmdName]();
-    }
-
-    return `<span class='error'>cat: ${args[0]}: Error reading file content</span>`;
+    if (commands[cmdName]) return commands[cmdName]();
+    return `<span class='error'>cat: ${requested}: Error reading file content</span>`;
   },
+
+  uname: () => `<span class="info">Linux resume 6.8.0 #1 SMP PREEMPT</span>`,
+
+  uptime: () => {
+    const sec = Math.floor((Date.now() - bootTime) / 1000);
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    return `<span class="info">up ${h}h ${m}m ${s}s</span>`;
+  },
+
+  date: () => `<span class="info">${new Date().toString()}</span>`,
 
   neofetch: () => `
 <pre class="ascii-art">
              .ooooo.   <span class="info">OS: Ubuntu (Terminal Resume)</span>
-            d88'   '88b  <span class="info">Kernel: .NET Core</span>
-            888     888  <span class="info">Shell: bash</span>
+            d88'   '88b  <span class="info">Shell: bash</span>
             888     888  <span class="info">User: ${terminalData.name}</span>
 .o.         888     888  <span class="warn">Focus: Cloud & DevOps</span>
-'888b       '8b   d88'   <span class="warn">Lang: Docker, Terraform</span>
- '888b       '8ooooo'    <span class="warn">DB: PostgreSQL, OCI</span>
-  '888b                  <span class="warn">Framework: .NET Core</span>
-   '888b
-    '888b
+'888b       '8b   d88'   <span class="warn">Stack: Docker, Terraform, Go</span>
+ '888b       '8ooooo'    <span class="warn">Cloud: Oracle Cloud (OCI)</span>
 </pre>
 `,
+
+  // fun: sudo hire-me
+  sudo: (args) => {
+    const sub = normalizeKey(args[0]);
+    if (sub === "hire-me" || (sub === "hire" && normalizeKey(args[1]) === "me")) {
+      return commands["hire-me"]();
+    }
+    return `<span class='error'>sudo: ${args.join(" ")}: command not found</span>`;
+  },
+
+  "hire-me": () => `
+<span class="section-title">Hire Me</span>
+<span class="success">Why me?</span>
+- I deploy real workloads (OCI VPS + Docker + Nginx + SSL)
+- I automate delivery (GitHub Actions)
+- I care about reliability (hardening + monitoring basics)
+- I document everything (server-guide)
+
+<span class="warn">Fast access</span>
+- <span class="dim">resume</span>  (quick scan)
+- <span class="dim">projects</span>  (deep dive)
+- <span class="dim">open github</span>  (proof)
+`,
+
+  // alias convenience
+  "sudo-hire-me": () => commands["hire-me"](),
 };
 
 // --------------------------------------------------------------------------
@@ -354,9 +579,31 @@ function handleCommand(raw) {
   }
   historyIndex = -1;
 
-  const [cmd, ...args] = cmdLine.split(" ");
-  const fn = commands[cmd];
+  const [cmdRaw, ...args] = cmdLine.split(" ");
+  const cmd = cmdRaw.toLowerCase();
 
+  // Special case: "sudo hire-me" with dash/space variations
+  if (cmd === "sudo" && args.length) {
+    const result = commands.sudo(args);
+    if (result) printOutput(result);
+    return;
+  }
+
+  // alias: "sudo hire me" like
+  if (cmd === "sudo" && args[0] === "hire" && args[1] === "me") {
+    const result = commands["hire-me"]();
+    if (result) printOutput(result);
+    return;
+  }
+
+  // allow "hire-me" directly
+  if (cmd === "hire-me") {
+    const result = commands["hire-me"]();
+    if (result) printOutput(result);
+    return;
+  }
+
+  const fn = commands[cmd];
   if (!fn) {
     printOutput(
       `bash: <span class='error'>${cmd}</span>: command not found`,
@@ -378,37 +625,33 @@ input.addEventListener("keydown", (e) => {
     handleCommand(input.value);
     input.value = "";
   }
-  // Up Arrow (Tarihçede yukarı)
+
   if (e.key === "ArrowUp") {
     e.preventDefault();
     if (historyIndex < commandHistory.length - 1) {
       historyIndex++;
       input.value = commandHistory[historyIndex];
-      // İmleci sona taşı
-      setTimeout(
-        () => (input.selectionStart = input.selectionEnd = input.value.length),
-        0
-      );
+      setTimeout(() => {
+        input.selectionStart = input.selectionEnd = input.value.length;
+      }, 0);
     }
   }
-  // Down Arrow (Tarihçede aşağı)
+
   if (e.key === "ArrowDown") {
     e.preventDefault();
     if (historyIndex > 0) {
       historyIndex--;
       input.value = commandHistory[historyIndex];
-      // İmleci sona taşı
-      setTimeout(
-        () => (input.selectionStart = input.selectionEnd = input.value.length),
-        0
-      );
+      setTimeout(() => {
+        input.selectionStart = input.selectionEnd = input.value.length;
+      }, 0);
     } else if (historyIndex === 0) {
       historyIndex = -1;
       input.value = "";
     }
   }
-  // Ctrl + L (Temizleme)
-  if (e.ctrlKey && e.key === "l") {
+
+  if (e.ctrlKey && e.key.toLowerCase() === "l") {
     e.preventDefault();
     commands.clear();
   }
@@ -420,6 +663,7 @@ input.addEventListener("keydown", (e) => {
 
 window.addEventListener("load", () => {
   printOutput("Last login: tty1");
+  printOutput(commands.banner());
   printOutput(`Welcome, <span class="info">${terminalData.name}</span>`);
   printOutput("Type '<span class='success'>help</span>' to get started.");
   input.focus();
@@ -430,10 +674,9 @@ document.addEventListener("click", () => input.focus());
 
 // Mobil klavye uyumluluğu için
 if (window.visualViewport) {
-    window.visualViewport.addEventListener("resize", () => {
-        // Klavye açıldığında/kapandığında en alta kaydır
-        setTimeout(() => {
-            terminal.scrollTop = terminal.scrollHeight;
-        }, 100);
-    });
+  window.visualViewport.addEventListener("resize", () => {
+    setTimeout(() => {
+      terminal.scrollTop = terminal.scrollHeight;
+    }, 100);
+  });
 }

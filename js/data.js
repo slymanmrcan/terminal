@@ -19,12 +19,12 @@ export const PROFILE = {
   },
   locales: {
     en: {
-      title: "Cloud & DevOps Practitioner",
+      title: " Cloud & DevOps Developer",
       about:
         "Mathematics and Computer Science graduate with hands-on experience in Linux-based server administration, Docker containerization, Oracle Cloud (OCI) VPS infrastructure, and CI/CD pipelines. Experienced in configuring Nginx reverse proxy, domain management, security hardening, secret management, and automation-focused deployment workflows with GitHub Actions. Familiar with backend API development and service deployment using Go. Focused on building reliable, scalable, and maintainable infrastructure to improve system stability.",
       experience: [
         {
-          title: "Cloud & DevOps Projects (Independent)",
+          title: "Cloud & DevOps Learning Projects (Independent)",
           company: "Self-Employed",
           location: "Remote",
           period: "05/2022 - Present",
@@ -192,12 +192,12 @@ export const PROFILE = {
       ],
     },
     tr: {
-      title: "Cloud & DevOps Uzmani",
+      title: " Cloud & DevOps Developer",
       about:
         "Matematik ve Bilgisayar Bilimleri mezunu; Linux tabanli sunucu yonetimi, Docker containerization, Oracle Cloud (OCI) VPS altyapisi ve CI/CD pipeline'larinda uygulamali deneyime sahip. Nginx reverse proxy, domain yonetimi, guvenlik sertlestirme, secret management ve GitHub Actions ile otomasyon odakli deployment sureclerinde deneyimli. Go ile backend API gelistirme ve servis yayina alma konularina hakim. Hedefi guvenilir, olceklenebilir ve bakimi kolay altyapilar kurarak sistem kararliligini artirmak.",
       experience: [
         {
-          title: "Cloud & DevOps Projeleri (Bagimsiz)",
+          title: "Cloud & DevOps Ogrenme Projeleri (Bagimsiz)",
           company: "Freelance",
           location: "Remote",
           period: "05/2022 - Guncel",

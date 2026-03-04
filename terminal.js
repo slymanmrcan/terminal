@@ -1,5 +1,6 @@
 import { createCommandRunner } from "./js/commands.js";
 import { PROFILE } from "./js/data.js";
+import { mountSnakeGame } from "./js/games/snake.js";
 import { getInitialLocale, persistLocale } from "./js/i18n.js";
 import { applyTheme, getInitialTheme, toggleTheme as toggleThemeHelper } from "./js/theme.js";
 
@@ -19,6 +20,7 @@ let commandHistory = [];
 let historyIndex = -1;
 let runner = null;
 let autocompleteState = null;
+let activeSnakeGame = null;
 
 function getPrompt() {
   return runner ? runner.getPrompt() : "suleyman@resume:~$";
@@ -31,7 +33,28 @@ function syncPrompt() {
 }
 
 function clearOutput() {
+  if (activeSnakeGame) {
+    activeSnakeGame.stop();
+    activeSnakeGame = null;
+  }
   output.innerHTML = "";
+}
+
+function mountInteractiveWidgets(line) {
+  const snakeHost = line.querySelector("[data-snake-host]");
+  if (!snakeHost) return;
+
+  if (activeSnakeGame) {
+    activeSnakeGame.stop();
+    activeSnakeGame = null;
+  }
+
+  activeSnakeGame = mountSnakeGame(snakeHost, {
+    locale: state.locale,
+    onExit: () => {
+      activeSnakeGame = null;
+    },
+  });
 }
 
 function printOutput(html, cls = "") {
@@ -39,6 +62,7 @@ function printOutput(html, cls = "") {
   line.className = `output-line ${cls}`;
   line.innerHTML = html;
   output.appendChild(line);
+  mountInteractiveWidgets(line);
   output.scrollTop = output.scrollHeight;
 }
 
@@ -225,6 +249,11 @@ input.addEventListener("input", () => {
 });
 
 input.addEventListener("keydown", (event) => {
+  if (activeSnakeGame && activeSnakeGame.handleKey(event)) {
+    event.preventDefault();
+    return;
+  }
+
   if (event.key === "Tab") {
     event.preventDefault();
     applyAutocomplete(event.shiftKey ? -1 : 1);

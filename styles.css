@@ -47,18 +47,22 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: "JetBrains Mono", "Fira Code", monospace;
-  font-size: 13px;
+  font-size: clamp(15px, 0.28vw + 12px, 19px);
   line-height: 1.4;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: clamp(8px, 2vh, 24px);
 }
 
 /* Terminal Kapsayıcısı ve Merkezleme */
 .terminal {
-  width: 90%; /* Sayfanın %90'ını kapla */
-  max-width: 900px; /* Maksimum genişlik sınırı */
-  height: 100vh;
-  height: 100dvh;
-  margin: 0 auto; /* Yatayda ortala */
+  width: min(98vw, 1520px);
+  max-width: 1520px;
+  height: clamp(500px, 66vh, 780px);
+  height: clamp(500px, 66dvh, 780px);
+  margin: 0 auto;
   padding: 20px 10px; /* Üst/Alt padding'i artırarak kenardan uzaklaştır */
   display: flex;
   flex-direction: column;
@@ -90,6 +94,44 @@ body {
   white-space: pre-wrap; /* Metinlerin alt satıra inmesini sağlar */
 }
 
+.snake-host {
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.snake-game-panel {
+  display: inline-block;
+  border: 1px solid var(--fg-dim);
+  padding: 8px;
+}
+
+.snake-game-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.snake-score strong {
+  color: var(--success);
+}
+
+.snake-status {
+  color: var(--info);
+}
+
+.snake-canvas {
+  display: block;
+  width: 320px;
+  max-width: 100%;
+  image-rendering: pixelated;
+}
+
+.snake-hint {
+  margin-top: 6px;
+  color: var(--fg-dim);
+}
+
 .command-line {
   color: var(--fg-dim);
 }
@@ -110,7 +152,7 @@ body {
 
 /* Banner, ascii vs varsa minimal */
 .ascii-art {
-  font-size: 13px;
+  font-size: clamp(10px, 0.6vw, 13px);
   line-height: 1.1; /* Daha kompakt görünüm */
   margin: 4px 0;
 }
@@ -125,7 +167,7 @@ body {
   align-items: center;
   gap: 8px;
   border-top: 1px solid var(--fg-dim);
-  padding-top: 8px;
+  padding-top: 10px;
   margin-top: 8px;
   background: var(--bg);
 }
@@ -177,14 +219,31 @@ body {
   font-family: monospace;
 }
 
+@media (min-width: 1800px) {
+  body {
+    font-size: clamp(16px, 0.22vw + 12px, 20px);
+  }
+
+  .terminal {
+    width: min(98vw, 1700px);
+    max-width: 1700px;
+    height: clamp(560px, 65dvh, 820px);
+  }
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 600px) {
   body {
     font-size: 14px; /* Slightly larger text for readability */
+    align-items: stretch;
+    padding-top: 0;
   }
 
   .terminal {
     width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0 auto;
     padding: 10px 4px; /* Reduce padding to maximize width */
     max-width: none;
   }

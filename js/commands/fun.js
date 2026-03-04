@@ -129,6 +129,19 @@ ${strings.messages.coffee}
       return `<span class=\"success\">010101 001100 101010 110011</span>\n${strings.messages.matrix}`;
     },
 
+    snake: () => {
+      const hint =
+        state.locale === "tr"
+          ? "Kontrol: ok tuslari veya WASD. Cikmak icin X veya ESC."
+          : "Controls: Arrow keys or WASD. Press X or ESC to quit.";
+
+      return `
+<span class="section-title">snake</span>
+<span class="dim">${hint}</span>
+<div class="snake-host" data-snake-host></div>
+`;
+    },
+
     ascii: (args) => {
       const strings = getStrings();
       const key = normalizeKey(args[0]);

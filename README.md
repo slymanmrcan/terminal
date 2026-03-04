@@ -18,6 +18,7 @@ Interaktif, terminal gorunumlu ve iki dilli (TR/EN) CV sitesi.
 - `coffee`
 - `roll`
 - `matrix`
+- `snake` (ok tuslari/WASD, cikis: X/ESC)
 - `ascii [terminal|cat|rocket|skull|list]`
 - `cowsay [mesaj]`
 - `joke`

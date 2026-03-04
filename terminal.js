@@ -1,573 +1,204 @@
-const terminalData = {
-  name: "Süleyman MERCAN",
-  title: "Cloud & DevOps Practitioner",
-  contact: {
-    phone: "+90 551 952 45 00",
-    email: "slymanmrcan@gmail.com",
-    github: "github.com/slymanmrcan",
-    linkedin: "linkedin.com/in/slymanmrcan",
-    website: "slymanmrcan.github.io/terminal",
-    location: "Turkey (Remote-friendly)",
-  },
+import { createCommandRunner } from "./js/commands.js";
+import { PROFILE } from "./js/data.js";
+import { getInitialLocale, persistLocale } from "./js/i18n.js";
+import { applyTheme, getInitialTheme, toggleTheme as toggleThemeHelper } from "./js/theme.js";
 
-  about:
-    "Cloud and DevOps practitioner with practical experience in Linux server administration, containerized deployments, and cloud infrastructure management. Hands-on work with Oracle Cloud VPS environments, Docker containerization, networking fundamentals, and CI/CD automation.\n\nWork Approach:\n• Infrastructure-first mindset focused on reliability\n• Automation-driven deployment workflows\n• Strong troubleshooting for production systems\n• Continuous learning in cloud and DevOps tooling",
-
-  experience: [
-    {
-      title: "Cloud & DevOps Projects (Independent)",
-      company: "Self-Employed",
-      location: "Remote",
-      period: "05/2022 - Present",
-      description:
-        "Provisioned Oracle Cloud VPS servers, configured hardened Linux environments, deployed containerized applications with Docker Compose, built CI/CD pipelines with GitHub Actions and managed Nginx reverse proxy setups for production workloads.",
-    },
-    {
-      title: "Developer",
-      company: "Logiting Teknoloji",
-      location: "Konya",
-      period: "09/2021 - 05/2022",
-      description:
-        "Developed web applications with .NET Core and collaborated on API integrations while gaining practical experience with server-side environments and deployment workflows.",
-    },
-  ],
-
-  education: [
-    {
-      degree: "Mathematics & Computer Science",
-      school: "Necmettin Erbakan University",
-      period: "2018 - 2021",
-    },
-    {
-      degree: "Computer Programming",
-      school: "Konya Technical University",
-      period: "2015 - 2018",
-    },
-  ],
-
-  skills: {
-    Cloud: [
-      "Oracle Cloud (OCI)",
-      "Linux Server Administration",
-      "VPS Management",
-      "Security Hardening",
-    ],
-    DevOps: [
-      "Docker",
-      "GitHub Actions",
-      "Terraform",
-      "Nginx",
-      "Prometheus",
-      "Grafana",
-    ],
-    Backend: ["Go", "PostgreSQL", "REST API"],
-    Network: ["TCP/IP", "DNS", "Firewall", "Routing"],
-  },
-
-  projects: [
-    {
-      name: "GitHub Organization Infrastructure",
-      slug: "github-infra",
-      tech: "Terraform, GitHub API, GitHub Actions",
-      description: "Infrastructure as Code for managing GitHub organizations",
-      link: "https://github.com/Bilgisayar-Kavramlari-Toplulugu/github-infra",
-      features: [
-        "Repository provisioning via Terraform",
-        "Team and permission automation",
-        "PR validation with GitHub Actions",
-        "Open source infrastructure management",
-      ],
-    },
-    {
-      name: "VPS Hardening & Monitoring Guide",
-      slug: "server-guide",
-      tech: "Linux, Docker, Nginx, Prometheus, Grafana",
-      description: "Production server setup documentation (living handbook)",
-      link: "https://suleymanmrcn.github.io/server-guide/",
-      features: [
-        "Linux security hardening recipes",
-        "Docker deployment patterns",
-        "Nginx reverse proxy + SSL guidance",
-        "Monitoring and runbooks",
-      ],
-    },
-    {
-      name: "RSS Aggregator Service",
-      slug: "techfeed",
-      tech: "Go, Docker, Nginx",
-      description: "Backend service that aggregates RSS feeds",
-      link: "https://techfeed.is-app.com",
-      features: [
-        "RSS parsing and aggregation",
-        "Title-based filtering",
-        "Docker container deployment",
-        "Production deployment on OCI VPS",
-      ],
-    },
-  ],
-
-  otherProjects: ["containerized apps", "log monitoring", "deployment automation"],
-
-  certifications: [
-    { title: "Docker Temelleri", issuer: "BTK Akademi", id: "wmlFJO1z69" },
-    { title: "DevOps Sertifikası", issuer: "Optivisdom", id: "#5088da8e..." },
-    { title: "İleri Ağ Teknolojileri", issuer: "BTK Akademi", id: "oJpS7GOPxO" },
-  ],
-
-  languages: [
-    { lang: "Turkish", level: "Native" },
-    { lang: "English", level: "A2 (Technical Documentation)" },
-  ],
-
-  // İstersen buraya gerçek PDF linkini koy
-  assets: {
-    pdf: "", // örn: "https://.../Suleyman_Mercan_CV.pdf"
-  },
-};
-
-// --------------------------------------------------------------------------
-// FILE SIZES (ls)
-// --------------------------------------------------------------------------
-
-const fileSizes = {
-  "about.txt": "1.4K",
-  "experience.txt": "1.8K",
-  "education.txt": "800B",
-  "skills.txt": "1.2K",
-  "projects.txt": "2.5K",
-  "certifications.txt": "1.1K",
-  "languages.txt": "400B",
-  "contact.txt": "500B",
-  "resume.txt": "900B",
-  "stack.txt": "700B",
-  "links.txt": "450B",
-  "README.md": "350B",
-};
-
-// --------------------------------------------------------------------------
-// STATE
-// --------------------------------------------------------------------------
+const GUIDE_STORAGE_KEY = "terminal_guide_seen_v1";
 
 const output = document.getElementById("output");
 const input = document.getElementById("input");
-const terminal = document.getElementById("terminal");
+const promptNode = document.querySelector(".prompt");
+
+const state = {
+  locale: getInitialLocale("tr"),
+  theme: getInitialTheme("dark"),
+  bootTime: Date.now(),
+};
 
 let commandHistory = [];
 let historyIndex = -1;
+let runner = null;
+let autocompleteState = null;
 
-const PROMPT = "suleyman@resume:~$";
-const bootTime = Date.now();
+function getPrompt() {
+  return runner ? runner.getPrompt() : "suleyman@resume:~$";
+}
 
-// --------------------------------------------------------------------------
-// OUTPUT HELPERS
-// --------------------------------------------------------------------------
+function syncPrompt() {
+  if (promptNode) {
+    promptNode.textContent = getPrompt();
+  }
+}
+
+function clearOutput() {
+  output.innerHTML = "";
+}
 
 function printOutput(html, cls = "") {
   const line = document.createElement("div");
   line.className = `output-line ${cls}`;
   line.innerHTML = html;
   output.appendChild(line);
-  terminal.scrollTop = terminal.scrollHeight;
+  output.scrollTop = output.scrollHeight;
 }
 
 function printCommand(cmd) {
-  printOutput(`<span class="command-line">${PROMPT} ${cmd}</span>`);
+  printOutput(`<span class=\"command-line\">${getPrompt()} ${cmd}</span>`);
 }
 
-function openUrl(url) {
+function setLocale(locale) {
+  const nextLocale = persistLocale(locale);
+  if (!nextLocale) return state.locale;
+  state.locale = nextLocale;
+  syncPrompt();
+  return state.locale;
+}
+
+function setTheme(theme) {
+  const nextTheme = applyTheme(theme);
+  state.theme = nextTheme;
+  return state.theme;
+}
+
+function toggleTheme() {
+  const nextTheme = toggleThemeHelper(state.theme);
+  state.theme = nextTheme;
+  return state.theme;
+}
+
+function hasSeenGuide() {
   try {
-    window.open(url, "_blank", "noopener,noreferrer");
-  } catch (e) {
-    // bazı ortamlarda popup bloklanabilir
+    return localStorage.getItem(GUIDE_STORAGE_KEY) === "1";
+  } catch (error) {
+    return true;
   }
 }
 
-function padRight(str, n) {
-  return (str + " ".repeat(n)).slice(0, n);
+function markGuideSeen() {
+  try {
+    localStorage.setItem(GUIDE_STORAGE_KEY, "1");
+  } catch (error) {
+    // ignore storage errors
+  }
 }
 
-function normalizeKey(s) {
-  return (s || "").toLowerCase().trim();
+function resetAutocomplete() {
+  autocompleteState = null;
 }
 
-// --------------------------------------------------------------------------
-// MINI MAN PAGES
-// --------------------------------------------------------------------------
+function arraysEqual(a, b) {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i += 1) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
 
-const manPages = {
-  help: "List available commands.",
-  about: "Show profile summary.",
-  experience: "Show work experience.",
-  education: "Show education history.",
-  skills: "Show technical skills.",
-  projects: "Show projects list.",
-  project: "Open a project by index: project 1 | project 2 | project 3",
-  repo: "Open a project/repo by slug: repo github-infra | repo server-guide | repo techfeed",
-  links: "Show all links (GitHub, LinkedIn, Website, Email).",
-  contact: "Show contact info.",
-  resume: "One-screen resume summary for quick scan.",
-  stack: "Detailed stack overview (Cloud/DevOps/Backend/Network).",
-  open: "Open link: open github | open linkedin | open web | open mail",
-  download: "Open CV PDF if available.",
-  clear: "Clear terminal output.",
-  ls: "List files (fake directory view).",
-  cat: "Read file: cat about.txt | cat resume.txt | cat stack.txt | cat links.txt",
-  whoami: "Print username.",
-  pwd: "Print working directory.",
-  neofetch: "Show system-style summary.",
-  uname: "Show kernel info (fun).",
-  uptime: "Show uptime since page load.",
-  date: "Print current date/time.",
-  banner: "Print welcome banner again.",
-  "sudo hire-me": "Fun command that prints a hire pitch.",
-};
+function getTokenEnd(value, cursor) {
+  let end = cursor;
+  while (end < value.length && !/\s/.test(value[end])) {
+    end += 1;
+  }
+  return end;
+}
 
-// --------------------------------------------------------------------------
-// COMMANDS
-// --------------------------------------------------------------------------
+function getAutocompleteContext(value, cursor) {
+  const beforeCursor = value.slice(0, cursor);
 
-const commands = {
-  help: () => `
-<span class="section-title">Available commands</span>
-about       experience    education
-skills      projects      project
-stack       resume        links
-certifications  languages  contact
-open        repo          download
-clear       github        linkedin
-<span class="info">cat [file]</span>  <span class="info">ls</span>            whoami
-neofetch    pwd           uname
-uptime      date          banner
-<span class="info">man [command]</span>  <span class="info">sudo hire-me</span>
-`,
+  let replaceStart = beforeCursor.length;
+  while (replaceStart > 0 && !/\s/.test(beforeCursor[replaceStart - 1])) {
+    replaceStart -= 1;
+  }
 
-  man: (args) => {
-    const key = normalizeKey(args[0]);
-    if (!key) return "<span class='error'>man: missing command</span>";
-    const page = manPages[key] || manPages[args.join(" ")] || null;
-    if (!page) return `<span class='error'>man: no manual entry for ${args[0]}</span>`;
-    return `<span class="section-title">MAN ${args.join(" ")}</span>\n${page}`;
-  },
+  const replaceEnd = getTokenEnd(value, cursor);
+  const prefix = value.slice(replaceStart, cursor);
+  const preceding = value.slice(0, replaceStart);
+  const parts = preceding.trim().split(/\s+/).filter(Boolean);
 
-  banner: () => `
-<pre class="ascii-art">
-   ________              __      __  ____  _  __
-  / ____/ /___  __  ____/ /___  / / / __ \\/ |/ /
- / /   / / __ \\/ / / / __  / / / / / /_/ /    /
-/ /___/ / /_/ / /_/ / /_/ / /_/ / / _, _/ /|  /
-\\____/_/\\____/\\__,_/\\__,_/\\__, / /_/ |_/_/ |_/
-                         /____/
+  if (parts.length === 0) {
+    return {
+      type: "command",
+      command: "",
+      args: [],
+      argIndex: -1,
+      prefix,
+      replaceStart,
+      replaceEnd,
+      signature: `cmd|${prefix}`,
+    };
+  }
 
-<span class="info">${terminalData.name}</span>  —  <span class="warn">${terminalData.title}</span>
-<span class="dim">Type</span> <span class="success">help</span> <span class="dim">to explore.</span>
-</pre>
-`,
+  const command = parts[0];
+  const args = parts.slice(1);
+  const argIndex = args.length;
 
-  about: () => `
-<span class="section-title">${terminalData.name}</span>
-<span class="info">${terminalData.title}</span>
-<span class="info-label">${terminalData.contact.location}</span>
+  return {
+    type: "argument",
+    command,
+    args,
+    argIndex,
+    prefix,
+    replaceStart,
+    replaceEnd,
+    signature: `arg|${command}|${argIndex}|${args.join(" ")}|${prefix}`,
+  };
+}
 
-${terminalData.about}
-`,
+function applyAutocomplete(direction = 1) {
+  if (!runner) return;
 
-  experience: () => {
-    let out = `<span class="section-title">Experience</span>\n`;
-    terminalData.experience.forEach((e) => {
-      out += `
-<span class="success">${e.title}</span> @ <span class="info">${e.company}</span>
-<span class="info-label">${e.location} - ${e.period}</span>
-${e.description}
-`;
-    });
-    return out;
-  },
+  const cursor = input.selectionStart ?? input.value.length;
+  const context = getAutocompleteContext(input.value, cursor);
 
-  education: () => {
-    let out = `<span class="section-title">Education</span>\n`;
-    terminalData.education.forEach((e) => {
-      out += `
-<span class="success">${e.degree}</span>
-<span class="info">${e.school}</span>
-<span class="info-label">${e.period}</span>
-`;
-    });
-    return out;
-  },
+  const candidates =
+    context.type === "command"
+      ? runner.getCommandCompletions(context.prefix)
+      : runner.getArgumentCompletions(context.command, context.args, context.argIndex, context.prefix);
 
-  skills: () => {
-    let out = `<span class="section-title">Skills</span>\n`;
-    for (const [k, v] of Object.entries(terminalData.skills)) {
-      out += `<span class="warn">${k}</span>: ${v.join(", ")}\n`;
-    }
-    return out;
-  },
+  if (!candidates.length) return;
 
-  stack: () => `
-<span class="section-title">Stack</span>
+  let index = direction < 0 ? candidates.length - 1 : 0;
+  if (
+    autocompleteState &&
+    autocompleteState.signature === context.signature &&
+    arraysEqual(autocompleteState.candidates, candidates)
+  ) {
+    const step = direction < 0 ? -1 : 1;
+    index = (autocompleteState.index + step + candidates.length) % candidates.length;
+  } else if (candidates.length > 1) {
+    printOutput(`<span class=\"dim\">${candidates.join("  ")}</span>`);
+  }
 
-<span class="warn">Cloud</span>
-- Oracle Cloud (OCI): VPS provisioning, networking basics, security hardening
+  const selected = candidates[index];
+  const before = input.value.slice(0, context.replaceStart);
+  const after = input.value.slice(context.replaceEnd);
+  const addSpace = candidates.length === 1 && after.length === 0;
 
-<span class="warn">Linux & Security</span>
-- Ubuntu/Debian admin, SSH hardening, firewall, Fail2ban
-- Nginx reverse proxy, SSL/TLS with Certbot
+  input.value = `${before}${selected}${addSpace ? " " : ""}${after}`;
 
-<span class="warn">Containers & Delivery</span>
-- Docker, Docker Compose, image optimization, env-based configs
-- GitHub Actions: build/deploy automation, PR validation patterns
+  const nextCursor = (before + selected + (addSpace ? " " : "")).length;
+  input.selectionStart = input.selectionEnd = nextCursor;
 
-<span class="warn">Observability</span>
-- Prometheus + Grafana fundamentals
+  autocompleteState = {
+    signature: context.signature,
+    candidates,
+    index,
+  };
+}
 
-<span class="warn">Backend</span>
-- Go services, REST API basics, PostgreSQL ops (backup/restore)
-`,
+runner = createCommandRunner({
+  state,
+  clearOutput,
+  setLocale,
+  setTheme,
+  toggleTheme,
+});
 
-  projects: () => {
-    let out = `<span class="section-title">Projects</span>\n`;
-    terminalData.projects.forEach((p, i) => {
-      out += `
-<span class="success">${i + 1}. ${p.name}</span> (<span class="dim">${p.tech}</span>)
-${p.description}
-- ${p.features.join("\n- ")}
-<span class="info">open:</span> <span class="dim">project ${i + 1}</span>  |  <span class="info">repo:</span> <span class="dim">repo ${p.slug}</span>
-`;
-    });
-    out += `\nOther: <span class="dim">${terminalData.otherProjects.join(", ")}</span>`;
-    return out;
-  },
+setLocale(state.locale);
+setTheme(state.theme);
+syncPrompt();
 
-  project: (args) => {
-    const idx = parseInt(args[0], 10);
-    if (!idx || idx < 1 || idx > terminalData.projects.length) {
-      return "<span class='error'>usage: project 1 | project 2 | project 3</span>";
-    }
-    const p = terminalData.projects[idx - 1];
-    openUrl(p.link);
-    return `Opening <span class="success">${p.name}</span>...`;
-  },
-
-  repo: (args) => {
-    const slug = normalizeKey(args[0]);
-    if (!slug) return "<span class='error'>usage: repo github-infra|server-guide|techfeed</span>";
-    const p = terminalData.projects.find((x) => normalizeKey(x.slug) === slug);
-    if (!p) return `<span class='error'>repo: ${args[0]}: not found</span>`;
-    openUrl(p.link);
-    return `Opening <span class="success">${p.slug}</span>...`;
-  },
-
-  links: () => `
-<span class="section-title">Links</span>
-Web      : <span class="info">https://${terminalData.contact.website}</span>
-GitHub   : <span class="info">https://${terminalData.contact.github}</span>
-LinkedIn : <span class="info">https://${terminalData.contact.linkedin}</span>
-Email    : <span class="info">mailto:${terminalData.contact.email}</span>
-`,
-
-  resume: () => `
-<span class="section-title">Resume (Quick)</span>
-<span class="success">${terminalData.name}</span> — <span class="info">${terminalData.title}</span>
-<span class="info-label">${terminalData.contact.location}</span>
-
-<span class="warn">Highlights</span>
-- OCI VPS provisioning + Linux hardening (SSH, firewall, Fail2ban)
-- Docker Compose deployments, Nginx reverse proxy + SSL (Certbot)
-- CI/CD automation with GitHub Actions
-- Observability fundamentals (Prometheus, Grafana)
-- Go services + PostgreSQL ops
-
-<span class="warn">Top Projects</span>
-- GitHub org infra via Terraform: <span class="dim">repo github-infra</span>
-- Server hardening guide: <span class="dim">repo server-guide</span>
-- RSS Aggregator (Go): <span class="dim">repo techfeed</span>
-
-<span class="warn">Links</span>
-- <span class="dim">open web</span> | <span class="dim">open github</span> | <span class="dim">open linkedin</span> | <span class="dim">open mail</span>
-`,
-
-  contact: () => `
-<span class="section-title">Contact</span>
-Email    : <span class="info">${terminalData.contact.email}</span>
-Phone    : <span class="info">${terminalData.contact.phone}</span>
-Web      : <span class="info">https://${terminalData.contact.website}</span>
-GitHub   : <span class="info">https://${terminalData.contact.github}</span>
-LinkedIn : <span class="info">https://${terminalData.contact.linkedin}</span>
-`,
-
-  certifications: () => {
-    let out = `<span class="section-title">Certifications</span>\n`;
-    terminalData.certifications.forEach((c) => {
-      out += `
-<span class="success">${c.title}</span> - <span class="info">${c.issuer}</span>
-<span class="dim">ID: ${c.id}</span>
-`;
-    });
-    return out;
-  },
-
-  languages: () => {
-    let out = `<span class="section-title">Languages</span>\n`;
-    terminalData.languages.forEach((l) => {
-      out += `<span class="info">${l.lang}</span>: ${l.level}\n`;
-    });
-    return out;
-  },
-
-  all: () =>
-    commands.banner() +
-    commands.about() +
-    commands.experience() +
-    commands.education() +
-    commands.skills() +
-    commands.projects() +
-    commands.certifications() +
-    commands.languages() +
-    commands.contact(),
-
-  clear: () => {
-    output.innerHTML = "";
-    return "";
-  },
-
-  open: (args) => {
-    const target = normalizeKey(args[0]);
-    if (!target) return "<span class='error'>usage: open github|linkedin|web|mail</span>";
-
-    if (target === "github") {
-      openUrl(`https://${terminalData.contact.github}`);
-      return "Opening GitHub...";
-    }
-    if (target === "linkedin") {
-      openUrl(`https://${terminalData.contact.linkedin}`);
-      return "Opening LinkedIn...";
-    }
-    if (target === "web" || target === "website") {
-      openUrl(`https://${terminalData.contact.website}`);
-      return "Opening website...";
-    }
-    if (target === "mail" || target === "email") {
-      openUrl(`mailto:${terminalData.contact.email}`);
-      return "Opening mail client...";
-    }
-    return `<span class='error'>open: unknown target '${args[0]}'</span>`;
-  },
-
-  download: () => {
-    if (terminalData.assets.pdf) {
-      openUrl(terminalData.assets.pdf);
-      return "Opening CV PDF...";
-    }
-    return `<span class="warn">No PDF linked yet.</span>\nSet <span class="dim">terminalData.assets.pdf</span> to your CV PDF URL.`;
-  },
-
-  github: () => {
-    openUrl(`https://${terminalData.contact.github}`);
-    return "Opening GitHub profile...";
-  },
-
-  linkedin: () => {
-    openUrl(`https://${terminalData.contact.linkedin}`);
-    return "Opening LinkedIn profile...";
-  },
-
-  whoami: () =>
-    terminalData.name
-      .toLowerCase()
-      .replace(/\s+/g, "_")
-      .replace(/[^a-z0-9_]/g, ""),
-
-  pwd: () => `<span class="info">/home/${commands.whoami()}/resume</span>`,
-
-  ls: () => {
-    let out = "";
-    Object.keys(fileSizes).forEach((file) => {
-      out += `<span class="dim">${padRight(fileSizes[file], 6)}</span> <span class="success">${file}</span>\n`;
-    });
-    return out;
-  },
-
-  cat: (args) => {
-    if (!args[0]) return "<span class='error'>cat: missing file operand</span>";
-
-    const requested = args[0];
-    const keyMatch = Object.keys(fileSizes).find(
-      (f) => f.toLowerCase() === requested.toLowerCase()
-    );
-    if (!keyMatch) {
-      return `<span class='error'>cat: ${requested}: No such file or directory</span>`;
-    }
-
-    const cmdName = keyMatch.toLowerCase().replace(".txt", "").replace(".md", "");
-
-    if (cmdName === "readme") {
-      return `
-${terminalData.name} - ${terminalData.title}
-
-Type 'help' to explore this terminal resume.
-Try: resume, projects, repo github-infra, stack
-`;
-    }
-
-    if (commands[cmdName]) return commands[cmdName]();
-    return `<span class='error'>cat: ${requested}: Error reading file content</span>`;
-  },
-
-  uname: () => `<span class="info">Linux resume 6.8.0 #1 SMP PREEMPT</span>`,
-
-  uptime: () => {
-    const sec = Math.floor((Date.now() - bootTime) / 1000);
-    const h = Math.floor(sec / 3600);
-    const m = Math.floor((sec % 3600) / 60);
-    const s = sec % 60;
-    return `<span class="info">up ${h}h ${m}m ${s}s</span>`;
-  },
-
-  date: () => `<span class="info">${new Date().toString()}</span>`,
-
-  neofetch: () => `
-<pre class="ascii-art">
-             .ooooo.   <span class="info">OS: Ubuntu (Terminal Resume)</span>
-            d88'   '88b  <span class="info">Shell: bash</span>
-            888     888  <span class="info">User: ${terminalData.name}</span>
-.o.         888     888  <span class="warn">Focus: Cloud & DevOps</span>
-'888b       '8b   d88'   <span class="warn">Stack: Docker, Terraform, Go</span>
- '888b       '8ooooo'    <span class="warn">Cloud: Oracle Cloud (OCI)</span>
-</pre>
-`,
-
-  // fun: sudo hire-me
-  sudo: (args) => {
-    const sub = normalizeKey(args[0]);
-    if (sub === "hire-me" || (sub === "hire" && normalizeKey(args[1]) === "me")) {
-      return commands["hire-me"]();
-    }
-    return `<span class='error'>sudo: ${args.join(" ")}: command not found</span>`;
-  },
-
-  "hire-me": () => `
-<span class="section-title">Hire Me</span>
-<span class="success">Why me?</span>
-- I deploy real workloads (OCI VPS + Docker + Nginx + SSL)
-- I automate delivery (GitHub Actions)
-- I care about reliability (hardening + monitoring basics)
-- I document everything (server-guide)
-
-<span class="warn">Fast access</span>
-- <span class="dim">resume</span>  (quick scan)
-- <span class="dim">projects</span>  (deep dive)
-- <span class="dim">open github</span>  (proof)
-`,
-
-  // alias convenience
-  "sudo-hire-me": () => commands["hire-me"](),
-};
-
-// --------------------------------------------------------------------------
-// COMMAND HANDLER
-// --------------------------------------------------------------------------
-
-function handleCommand(raw) {
+async function handleCommand(raw) {
   const cmdLine = raw.trim();
   if (!cmdLine) return;
 
@@ -579,68 +210,52 @@ function handleCommand(raw) {
   }
   historyIndex = -1;
 
-  const [cmdRaw, ...args] = cmdLine.split(" ");
-  const cmd = cmdRaw.toLowerCase();
+  const [cmdRaw, ...args] = cmdLine.split(/\s+/);
 
-  // Special case: "sudo hire-me" with dash/space variations
-  if (cmd === "sudo" && args.length) {
-    const result = commands.sudo(args);
+  try {
+    const result = await runner.runCommand(cmdRaw, args);
     if (result) printOutput(result);
-    return;
+  } catch (error) {
+    printOutput(`<span class='error'>Unexpected error: ${String(error.message || error)}</span>`, "error");
   }
-
-  // alias: "sudo hire me" like
-  if (cmd === "sudo" && args[0] === "hire" && args[1] === "me") {
-    const result = commands["hire-me"]();
-    if (result) printOutput(result);
-    return;
-  }
-
-  // allow "hire-me" directly
-  if (cmd === "hire-me") {
-    const result = commands["hire-me"]();
-    if (result) printOutput(result);
-    return;
-  }
-
-  const fn = commands[cmd];
-  if (!fn) {
-    printOutput(
-      `bash: <span class='error'>${cmd}</span>: command not found`,
-      "error"
-    );
-    return;
-  }
-
-  const result = fn(args);
-  if (result) printOutput(result);
 }
 
-// --------------------------------------------------------------------------
-// INPUT EVENTS
-// --------------------------------------------------------------------------
+input.addEventListener("input", () => {
+  resetAutocomplete();
+});
 
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    handleCommand(input.value);
-    input.value = "";
+input.addEventListener("keydown", (event) => {
+  if (event.key === "Tab") {
+    event.preventDefault();
+    applyAutocomplete(event.shiftKey ? -1 : 1);
+    return;
   }
 
-  if (e.key === "ArrowUp") {
-    e.preventDefault();
+  if (event.key === "Enter") {
+    resetAutocomplete();
+    handleCommand(input.value);
+    input.value = "";
+    return;
+  }
+
+  if (event.key === "ArrowUp") {
+    event.preventDefault();
+    resetAutocomplete();
     if (historyIndex < commandHistory.length - 1) {
-      historyIndex++;
+      historyIndex += 1;
       input.value = commandHistory[historyIndex];
       setTimeout(() => {
         input.selectionStart = input.selectionEnd = input.value.length;
       }, 0);
     }
+    return;
   }
 
-  if (e.key === "ArrowDown") {
-    e.preventDefault();
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    resetAutocomplete();
     if (historyIndex > 0) {
-      historyIndex--;
+      historyIndex -= 1;
       input.value = commandHistory[historyIndex];
       setTimeout(() => {
         input.selectionStart = input.selectionEnd = input.value.length;
@@ -649,34 +264,37 @@ input.addEventListener("keydown", (e) => {
       historyIndex = -1;
       input.value = "";
     }
+    return;
   }
 
-  if (e.ctrlKey && e.key.toLowerCase() === "l") {
-    e.preventDefault();
-    commands.clear();
+  if (event.ctrlKey && event.key.toLowerCase() === "l") {
+    event.preventDefault();
+    resetAutocomplete();
+    clearOutput();
   }
 });
 
-// --------------------------------------------------------------------------
-// BOOT / WELCOME
-// --------------------------------------------------------------------------
-
 window.addEventListener("load", () => {
-  printOutput("Last login: tty1");
-  printOutput(commands.banner());
-  printOutput(`Welcome, <span class="info">${terminalData.name}</span>`);
-  printOutput("Type '<span class='success'>help</span>' to get started.");
+  printOutput(runner.getLastLogin());
+  printOutput(runner.commands.banner());
+  printOutput(`${runner.getWelcomeLine()}, <span class=\"info\">${PROFILE.name}</span>`);
+  printOutput(runner.getHelpHint());
+
+  if (!hasSeenGuide() && runner.commands.guide) {
+    printOutput(`<span class=\"info\">${runner.getAutoGuideMessage()}</span>`);
+    printOutput(runner.commands.guide([]));
+    markGuideSeen();
+  }
+
   input.focus();
 });
 
-// Keep focus
 document.addEventListener("click", () => input.focus());
 
-// Mobil klavye uyumluluğu için
 if (window.visualViewport) {
   window.visualViewport.addEventListener("resize", () => {
     setTimeout(() => {
-      terminal.scrollTop = terminal.scrollHeight;
+      output.scrollTop = output.scrollHeight;
     }, 100);
   });
 }

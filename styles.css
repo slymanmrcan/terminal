@@ -9,6 +9,31 @@
   --success: #33ff33; /* Yeni Başarı Rengi */
 }
 
+html,
+body {
+  height: 100%;
+}
+
+body[data-theme="dark"] {
+  --bg: #000;
+  --fg: #00ff00;
+  --fg-dim: #00aa00;
+  --error: #ff5555;
+  --info: #5fd7ff;
+  --warn: #ffaa00;
+  --success: #33ff33;
+}
+
+body[data-theme="light"] {
+  --bg: #f8f9fb;
+  --fg: #0c5132;
+  --fg-dim: #5d6e63;
+  --error: #c62828;
+  --info: #0065d1;
+  --warn: #9d5b00;
+  --success: #0f7b3e;
+}
+
 /* reset */
 * {
   margin: 0;
@@ -24,14 +49,15 @@ body {
   font-family: "JetBrains Mono", "Fira Code", monospace;
   font-size: 13px;
   line-height: 1.4;
-  overflow-y: scroll; /* Terminal içeriği taştığında tüm sayfanın kaydırması için */
+  overflow: hidden;
 }
 
 /* Terminal Kapsayıcısı ve Merkezleme */
 .terminal {
   width: 90%; /* Sayfanın %90'ını kapla */
   max-width: 900px; /* Maksimum genişlik sınırı */
-  min-height: 100vh; /* Sayfa boyu kadar minimum yükseklik */
+  height: 100vh;
+  height: 100dvh;
   margin: 0 auto; /* Yatayda ortala */
   padding: 20px 10px; /* Üst/Alt padding'i artırarak kenardan uzaklaştır */
   display: flex;
@@ -40,10 +66,20 @@ body {
 
 .terminal-body {
   flex-grow: 1; /* Mevcut alanı doldur */
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   padding: 10px 15px; /* Yatay padding artırıldı */
-  overflow-y: auto;
+  overflow: hidden;
   overflow-x: hidden;
   border: 1px solid var(--fg-dim); /* Daha tutarlı sınır rengi */
+}
+
+.output {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Çıktı ve Giriş Satırları */
@@ -52,6 +88,10 @@ body {
   padding: 0;
   line-height: 1.4;
   white-space: pre-wrap; /* Metinlerin alt satıra inmesini sağlar */
+}
+
+.command-line {
+  color: var(--fg-dim);
 }
 
 .section-title {
@@ -77,11 +117,17 @@ body {
 
 .prompt {
   margin-right: 6px;
+  white-space: nowrap;
 }
 
 .input-line {
   display: flex;
   align-items: center;
+  gap: 8px;
+  border-top: 1px solid var(--fg-dim);
+  padding-top: 8px;
+  margin-top: 8px;
+  background: var(--bg);
 }
 
 .input {
@@ -92,6 +138,7 @@ body {
   font-family: inherit;
   font-size: inherit;
   flex: 1;
+  min-width: 0;
   caret-color: var(--fg);
   font-variant-ligatures: none;
 }
@@ -119,7 +166,7 @@ body {
 }
 
 /* hide scrollbar */
-.terminal-body::-webkit-scrollbar {
+.output::-webkit-scrollbar {
   display: none;
 }
 
@@ -150,18 +197,5 @@ body {
     font-size: 8px; /* Shrink ASCII art to fit */
     white-space: pre; /* Keep formatting */
     overflow-x: hidden; /* Prevent horizontal scroll just for logo */
-  }
-
-  .input-line {
-    flex-direction: column; /* Stack prompt and input on very narrow screens if needed */
-    align-items: stretch;
-  }
-
-  .prompt {
-    margin-bottom: 2px;
-  }
-
-  .input {
-    width: 100%;
   }
 }
